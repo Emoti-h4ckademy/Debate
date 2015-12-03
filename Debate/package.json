@@ -13,5 +13,9 @@
     "jade": "~1.11.0",
     "morgan": "~1.6.1",
     "serve-favicon": "~2.3.0"
+  },
+  "devDependencies": {
+    "jasmine": "^2.4.0",
+    "node-mocks-http": "^1.5.1"
   }
 }

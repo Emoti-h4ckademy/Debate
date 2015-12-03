@@ -1,0 +1,4 @@
+{
+    "OXFORD_EMOTION_API_KEY": "HERE GOES YOUR API KEY",
+    "OXFORD_EMOTION_URL": "https://api.projectoxford.ai/emotion/v1.0/recognize"
+}
