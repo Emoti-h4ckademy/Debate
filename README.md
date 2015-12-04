@@ -1,5 +1,8 @@
 # Debate
 
+- install external dependencies
+  ffmpeg: http://www.ffmpeg.org/download.html or ```brew install ffmpeg```
+
 - install dependencies:
 $ cd Debate && npm install
 
