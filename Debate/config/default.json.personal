@@ -1,4 +1,10 @@
 {
     "OXFORD_EMOTION_API_KEY": "HERE GOES YOUR API KEY",
-    "OXFORD_EMOTION_URL": "https://api.projectoxford.ai/emotion/v1.0/recognize"
+    "OXFORD_EMOTION_URL": "https://api.projectoxford.ai/emotion/v1.0/recognize",
+    "TWITTER_KEYS" : {
+      "CONSUMER_KEY" : "YOUR CONSUMER KEY",
+      "CONSUMER_SECRET" : "YOUR CONSUMER SECRET",
+      "ACCESS_TOKEN_KEY" : "YOUR ACCES TOKEN KEY",
+      "ACCESS_TOKEN_SECRET" : "YOUR ACCESS TOKEN SECRET"
+    }
 }
