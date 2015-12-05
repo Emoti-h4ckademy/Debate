@@ -4,11 +4,20 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
-
 var routes = require('./routes/index');
-var exphbs        = require('express-handlebars');
+var exphbs = require('express-handlebars');
+
+var dbHandler         = require('./lib/dbHandler');
 
 var app = express();
+
+//Initialize database
+dbHandler.initializeDatabase(app, function (error) {
+   if (error) {
+       console.log ("Could not initialize database. Check if MongoDB service is up");
+       process.exit(1);
+   }
+});
 
 // view engine setup
 app.engine('handlebars', exphbs({defaultLayout: 'main'}));
