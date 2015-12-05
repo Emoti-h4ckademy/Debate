@@ -7,7 +7,7 @@ var imageTransformation = require('../lib/imageTransformation');
 router.get('/', function(req, res, next) {
 
     var buf = fs.readFileSync('/home/algunenano/Pictures/picture_emotions.jpg');
-    imageTransformation.drawEmotion(buf, function (error, finalImageBuffer) {
+    imageTransformation.drawEmotions(buf, function (error, finalImageBuffer) {
         if (error) {
             console.log("DRAW: " + error);
         } else {
