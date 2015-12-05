@@ -1,52 +1,79 @@
 var gm = require('gm');
 var oxford = require('../lib/oxfordEmotions');
 
+/**
+ * Call example:
+var fs = require('fs');
+var imageTransformation = require('../lib/imageTransformation');
+
+    var buf = fs.readFileSync('/home/algunenano/Pictures/picture_emotions.jpg');
+    imageTransformation.drawEmotion(buf, function (error, finalImageBuffer) {
+        if (error) {
+            console.log("DRAW: " + error);
+        } else {
+            fs.writeFile("/home/algunenano/Pictures/picture5.jpg", new Buffer (finalImageBuffer), function(error) {
+                if(error) {
+                    console.log("WRITE: " + error);
+                } else {
+                    console.log("WRITE: Saved");
+                }
+            });
+        }
+    });
+ */
+
 
 function ImageTransformation () {
 
 }
 
 /**
- * 
- * @param {type} image
- * @param {type} callback (error, finalImageBuffer)
+ * Given an image draws the emotion information over it
+ * @param {type} image - Buffer with the image to be analyzed
+ * @param {type} callback (error, newImageBuffer, emotionResonse)
  * @returns {undefined}
  */
 ImageTransformation.prototype.drawEmotion = function (image, callback) {
     var self = this;
-//    oxford.recognizeImageB64(image, function (error, emotionResponse){
-    var error = false;
-    var emotionResponse = '[{"faceRectangle":{"height":115,"left":16,"top":81,"width":115},"scores":{"anger":0.005621977,"contempt":0.0315573,"disgust":0.00103119132,"fear":0.000295269449,"happiness":0.008638185,"neutral":0.881767869,"sadness":0.0698585957,"surprise":0.00122961379}}]';
-
+    oxford.recognizeImageB64(image, function (error, emotionResponse){
+        
         if (error) {
             callback (error);
             return;
         }
         
-    var faces = JSON.parse(emotionResponse);
-    var finalImage = new Buffer(image);
-        for (var iterator in faces) {
-            var faceRectangle = faces[iterator]["faceRectangle"];
-            if (!faceRectangle) {
-                callback ("Unable to parse face " + iterator);
+        var faces = JSON.parse(emotionResponse);
+
+        var myIterator = -1;
+        var myForFunction = function (error, newBuffer) {
+            if (error) {
+                callback (error);
+            }
+
+            myIterator++;
+            if (myIterator === faces.length) {
+                callback (false, newBuffer, emotionResponse);
                 return;
             }
-            self._drawBox(finalImage, faceRectangle, function (error, newBuffer) {
-                if (error) {
-                    callback (error);
-                    return;
-                } else {
-                    finalImage = newBuffer;
-                }
-            });
-        }
-        callback(false, finalImage);
-        return;
-//    });
+            self._drawBox(newBuffer, faces[myIterator]["faceRectangle"], myForFunction);
+        };
+
+        myForFunction(false, image);
+    });
 };
 
+/**
+ * Given an image and an object with the emotion data of a face, draws the data 
+ * @param {type} image - Base image to draw into (Not modified)
+ * @param {type} faceRectangle - Data of the face
+ * @param {type} callback (error, newImage)
+ * @returns {undefined}
+ */
 ImageTransformation.prototype._drawBox = function (image, faceRectangle, callback) {
-    console.log(faceRectangle);
+    if (!image || !faceRectangle) {
+        callback("DrawBox: Invalid parameters");
+    }
+
     var points = {
         toplx : faceRectangle["left"],                              toply : faceRectangle["top"],
         toprx : faceRectangle["left"] + faceRectangle["width"],     topry : faceRectangle["top"],
@@ -65,6 +92,4 @@ ImageTransformation.prototype._drawBox = function (image, faceRectangle, callbac
         });
 };
 
-
-
-var ImageTransformation = module.exports = exports = new ImageTransformation();
+var imageTransformation = module.exports = exports = new ImageTransformation();

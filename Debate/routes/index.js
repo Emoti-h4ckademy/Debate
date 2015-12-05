@@ -11,7 +11,7 @@ router.get('/', function(req, res, next) {
         if (error) {
             console.log("DRAW: " + error);
         } else {
-            fs.writeFile("/home/algunenano/Pictures/picture5.jpg", finalImageBuffer, function(error) {
+            fs.writeFile("/home/algunenano/Pictures/picture5.jpg", new Buffer (finalImageBuffer), function(error) {
                 if(error) {
                     console.log("WRITE: " + error);
                 } else {
