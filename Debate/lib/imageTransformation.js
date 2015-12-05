@@ -124,7 +124,7 @@ ImageTransformation.prototype._drawFace = function (image, face, callback) {
     
     var rectangle = {
         sizeX :     1000,
-        sizeY :     1000,
+        sizeY :     5000,
         sepX :      5,
         sepY :      0,
         cornerw :   4,
@@ -148,19 +148,21 @@ ImageTransformation.prototype._drawFace = function (image, face, callback) {
                 console.log("DRAWBOX SZ ERROR: " + error);
                 callback(error);
             }
-            var needsResize = false;
+            var proportion = size.width / size.height;
             var newSizeX = size.width;
             var newSizeY = size.height;
-            if (size.width < rectangle.x1) {
-                needsResize = true;
-                newSizeX = size.width * rectangle.sizeX / (size.width - rectangle.x0);       
-            }
-            if (size.height < rectangle.y1) {
-                needsResize = true;
+            if (size.width < rectangle.x1 || size.height < rectangle.y1) {
+                newSizeX = size.width * rectangle.sizeX / (size.width - rectangle.x0);
                 newSizeY = size.height * rectangle.sizeY / (size.height - rectangle.y0);
-            }
-            
-            if (needsResize) {
+                
+                var newProportion = newSizeX / newSizeY;
+                if (newProportion > proportion) {
+                    newSizeY = newSizeX / proportion;
+                }
+                if (newProportion < proportion) {
+                    newSizeX = newSizeY * proportion;
+                }
+
                 console.log("Old image : " + size.width + " " + size.height);
                 console.log("New image : " + newSizeX + " " + newSizeY);
                 
@@ -174,9 +176,10 @@ ImageTransformation.prototype._drawFace = function (image, face, callback) {
             
             tempImage.resize(newSizeX, newSizeY)
                 .fill("#262721")
-                .drawRectangle(rectangle.x0, rectangle.y0, rectangle.x1, undefined, rectangle.cornerw, rectangle.cornerh)
+                .drawRectangle(rectangle.x0, rectangle.y0, rectangle.x1, rectangle.y1, rectangle.cornerw, rectangle.cornerh)
                 .toBuffer('JPG', function (error, buffer) {
                     console.log("DRAWBOX: " + error);
+                    console.log("FINAL rectangle " + "("+ rectangle.x0 + "," + rectangle.y0+"), ("+rectangle.x1+","+rectangle.y1+")");
                     callback (error, buffer);
                 });
 
