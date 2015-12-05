@@ -1,0 +1,22 @@
+<script>$(document).ready(function() {
+    detectEmotionBtn();
+});
+</script>
+<div class="wrapper container">
+<div class="row"><h4>Images stored in database</h4></div>
+{{#each myimages}}
+    <h5>Username: {{username}}</h5>
+    <div class="row">
+        <div class="col-md-4">
+            <img style="max-width: 98%;" src="data:image/jpg; base64,{{image}}"/>
+        </div>
+        <div class="col-md-8">
+            <div style="text-align: center;">
+                <button  id="{{_id}}" class="btn btn-success emotion-retriever pull-left"
+                         style="margin: 2rem; margin-top: 8rem" type="button">Detect Emotion</button>
+            </div>
+            <div class="ajax-response-container{{_id}} pull-left"></div>
+        </div>
+    </div>
+{{/each}}
+</div>
