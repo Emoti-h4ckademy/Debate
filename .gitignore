@@ -35,3 +35,6 @@ node_modules
 
 # Avoid including license
 Debate/config/default.json
+
+# linux temp openend files
+*swp
