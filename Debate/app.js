@@ -16,6 +16,8 @@ dbHandler.initializeDatabase(app, function (error) {
    if (error) {
        console.log ("Could not initialize database. Check if MongoDB service is up");
        process.exit(1);
+   }else{
+    require('./lib/imageProcessor');
    }
 });
 
