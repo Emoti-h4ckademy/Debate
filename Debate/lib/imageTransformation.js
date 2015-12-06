@@ -3,91 +3,54 @@ var oxford = require('../lib/oxfordEmotions');
 var mkdirp = require('mkdirp');
 
 /**
- * Call example:
-var fs = require('fs');
-var imageTransformation = require('../lib/imageTransformation');
-
-    var buf = fs.readFileSync('/home/algunenano/Pictures/picture_emotions.jpg');
-    imageTransformation.drawEmotion(buf, function (error, finalImageBuffer) {
-        if (error) {
-            console.log("DRAW: " + error);
-        } else {
-            fs.writeFile("/home/algunenano/Pictures/picture5.jpg", new Buffer (finalImageBuffer), function(error) {
-                if(error) {
-                    console.log("WRITE: " + error);
-                } else {
-                    console.log("WRITE: Saved");
-                }
-            });
-        }
-    });
- */
-
-/**
  * ImageTransformation constructor
  * @returns {nm$_imageTransformation.ImageTransformation}
  */
 function ImageTransformation () {
-    
+    /**
+     * Font size in the image
+     */
+    this.fontSize = 13;
+    /**
+     * Temporal directory used during the composition of the final image
+     */
+    this.auxDir = "./tmp/";
 }
 
 /**
  * Given an image draws the emotion information over it
  * @param {type} image - Buffer with the image to be analyzed
- * @param {type} callback (error, newImageBuffer, emotionResonse)
+ * @param {type} emotionResponse - Emotion Response from Oxford
+ * @param {type} callback (error, newImageBuffer)
  * @returns {undefined}
  */
-ImageTransformation.prototype.drawEmotions = function (image, callback) {
+ImageTransformation.prototype.drawEmotions = function (image, emotionResponse, callback) {
     var self = this;
-//    oxford.recognizeImageB64(image, function (error, emotionResponse){
-    var error = false;
-    var emotionResponse = '[{"faceRectangle":{"height":115,"left":16,"top":81,"width":115},"scores":{"anger":0.005621977,"contempt":0.0315573,"disgust":0.00103119132,"fear":0.000295269449,"happiness":0.008638185,"neutral":0.881767869,"sadness":0.0698585957,"surprise":0.00122961379}}]';        
+    if (!image || !emotionResponse || !callback || emotionResponse === oxford.emptyResponse) {
+        callback ("Invalid parameters");
+        return;
+    }
+    
+    var faces = JSON.parse(emotionResponse);
+    var myIterator = -1;
+    var myForFunction = function (error, newBuffer) {
+        myIterator++;
         if (error) {
             callback (error);
+        }
+
+        if (myIterator === faces.length) {
+            self._drawBug(newBuffer, function(error, finalImage){
+                callback (error, finalImage);
+            });
             return;
         }
-        
-        var faces = JSON.parse(emotionResponse);
 
-        var myIterator = -1;
-        var myForFunction = function (error, newBuffer) {
-            myIterator++;
-            if (error) {
-                callback (error);
-            }
+        self._drawFace(newBuffer, faces[myIterator], myForFunction);
+    };
 
-            if (myIterator === faces.length) {
-                self._drawBug(newBuffer, function(error, finalImage){
-                    callback (error, finalImage, emotionResponse);
-                });
-                return;
-            }
-            
-            self._drawFace(newBuffer, faces[myIterator], myForFunction);
-            
-//            console.log(faces.length);
-//            console.log(faces);
-//            console.log(myIterator);
-//            console.log(faces[myIterator]);
-//            console.log(faces[myIterator]["faceRectangle"]);
-            
-        };
-
-        myForFunction(false, image);
-//    });
+    myForFunction(false, image);
 };
-
-
-function prettyFloat(x,nbDec) { 
-    if (!nbDec) nbDec = 100;
-    var a = Math.abs(x);
-    var e = Math.floor(a);
-    var d = Math.round((a-e)*nbDec); if (d === nbDec) { d=0; e++; }
-    var signStr = (x<0) ? "-" : " ";
-    var decStr = d.toString(); var tmp = 10; while(tmp<nbDec && d*tmp < nbDec) {decStr = "0"+decStr; tmp*=10;}
-    var eStr = e.toString();
-    return signStr+eStr+"."+decStr;
-}
 
 /**
  * Given an image and an object with the emotion data of a face, draws the data 
@@ -97,8 +60,10 @@ function prettyFloat(x,nbDec) {
  * @returns {undefined}
  */
 ImageTransformation.prototype._drawFace = function (image, face, callback) {
+    var self = this;
     if (!image || !face["faceRectangle"] || !face["scores"]) {
         callback("DrawBox: Invalid parameters");
+        return;
     }
     
     var faceRectangle = face["faceRectangle"];
@@ -112,33 +77,34 @@ ImageTransformation.prototype._drawFace = function (image, face, callback) {
     };
     
     var emotions = {
-        anger :     "Enfado: "      + (prettyFloat(parseFloat(scores["anger"])*100,2))+"%",
-        contempt :  "Desprecio: "   + (prettyFloat(parseFloat(scores["contempt"])*100,2))+"%",
-        disgust :   "Asco: "        + (prettyFloat(parseFloat(scores["disgust"])*100,2))+"%",
-        fear :      "Miedo: "       + (prettyFloat(parseFloat(scores["fear"])*100,2))+"%",
-        happiness : "Feliz: "       + (prettyFloat(parseFloat(scores["happiness"])*100,2))+"%",
-        neutral :   "Neutral: "     + (prettyFloat(parseFloat(scores["neutral"])*100,2))+"%",
-        sadness :   "Triste: "      + (prettyFloat(parseFloat(scores["sadness"])*100,2))+"%",
-        surprise :  "Sorpresa: "    + (prettyFloat(parseFloat(scores["surprise"])*100,2))+"%"
+        anger :     "Enfado: "      + ((parseFloat(scores["anger"])*100).toFixed(2))+"%",
+        contempt :  "Desprecio: "   + ((parseFloat(scores["contempt"])*100).toFixed(2))+"%",
+        disgust :   "Asco: "        + ((parseFloat(scores["disgust"])*100).toFixed(2))+"%",
+        fear :      "Miedo: "       + ((parseFloat(scores["fear"])*100).toFixed(2))+"%",
+        happiness : "Felicidad: "   + ((parseFloat(scores["happiness"])*100).toFixed(2))+"%",
+        neutral :   "Neutral: "     + ((parseFloat(scores["neutral"])*100).toFixed(2))+"%",
+        sadness :   "Tristeza: "    + ((parseFloat(scores["sadness"])*100).toFixed(2))+"%",
+        surprise :  "Sorpresa: "    + ((parseFloat(scores["surprise"])*100).toFixed(2))+"%"
     };
     
+    var emotionString = "";
+    for (var key in emotions) emotionString += emotions[key]+"\n";
+    
     var rectangle = {
-        sizeX :     1000,
-        sizeY :     5000,
-        sepX :      5,
-        sepY :      0,
+        sizeX :     self.fontSize * 9,
+        sizeY :     self.fontSize * 12,
+        sepX :      0,
+        sepY :      5,
         cornerw :   4,
         cornerh :   4
     };
-    rectangle ['x0'] = points.toprx + rectangle.sepX;
-    rectangle ['y0'] = points.topry + rectangle.sepY;
+    rectangle ['x0'] = points.bottomlx + rectangle.sepX;
+    rectangle ['y0'] = points.bottomly + rectangle.sepY;
     rectangle ['x1'] = rectangle.x0 + rectangle.sizeX;
     rectangle ['y1'] = rectangle.y0 + rectangle.sizeY;
     
-    //H4 Logo color: #262721
-    
     var tempImage = gm(image, 'memory.jpg')
-        .fill("#262721")
+        .fill("#262721") //H4 Logo color: #262721
         .drawLine(points.toplx, points.toply, points.toprx, points.topry)
         .drawLine(points.toplx, points.toply, points.bottomlx, points.bottomly)
         .drawLine(points.toprx, points.topry, points.bottomrx, points.bottomry)
@@ -147,7 +113,9 @@ ImageTransformation.prototype._drawFace = function (image, face, callback) {
             if (error) {
                 console.log("DRAWBOX SZ ERROR: " + error);
                 callback(error);
+                return;
             }
+            //Check if resize is needed and set the values to the new size
             var proportion = size.width / size.height;
             var newSizeX = size.width;
             var newSizeY = size.height;
@@ -162,24 +130,20 @@ ImageTransformation.prototype._drawFace = function (image, face, callback) {
                 if (newProportion < proportion) {
                     newSizeX = newSizeY * proportion;
                 }
-
-                console.log("Old image : " + size.width + " " + size.height);
-                console.log("New image : " + newSizeX + " " + newSizeY);
-                
-                console.log("Old rectangle " + "("+ rectangle.x0 + "," + rectangle.y0+"), ("+rectangle.x1+","+rectangle.y1+")");
                 rectangle.x0 *= newSizeX /size.width;
                 rectangle.x1 = rectangle.x0 + rectangle.sizeX;
                 rectangle.y0 *= newSizeY / size.height;
                 rectangle.y1 = rectangle.y0 + rectangle.sizeY;
-                console.log("New rectangle " + "("+ rectangle.x0 + "," + rectangle.y0+"), ("+rectangle.x1+","+rectangle.y1+")");
             }
             
+            var myFontSize = ''+self.fontSize+'px';
             tempImage.resize(newSizeX, newSizeY)
                 .fill("#262721")
                 .drawRectangle(rectangle.x0, rectangle.y0, rectangle.x1, rectangle.y1, rectangle.cornerw, rectangle.cornerh)
+                .fill("#D4FCC8")
+                .fontSize( myFontSize )
+                .drawText(rectangle.x0 + rectangle.cornerw, rectangle.y0 + self.fontSize + rectangle.cornerh, emotionString)
                 .toBuffer('JPG', function (error, buffer) {
-                    console.log("DRAWBOX: " + error);
-                    console.log("FINAL rectangle " + "("+ rectangle.x0 + "," + rectangle.y0+"), ("+rectangle.x1+","+rectangle.y1+")");
                     callback (error, buffer);
                 });
 
@@ -196,10 +160,10 @@ ImageTransformation.prototype._drawFace = function (image, face, callback) {
  * @returns {undefined}
  */
 ImageTransformation.prototype._drawBug = function (image, callback) {
-    var auxDir = "./tmp/";
-    var auxPath = auxDir + new Date().getTime() + ".png";
+    var self = this;
+    var auxPath = self.auxDir + new Date().getTime() + ".jpg";
     
-    mkdirp(auxDir, function (error) {
+    mkdirp(self.auxDir, function (error) {
         if (error) {
             console.log("DRAWBUG MKDIR ERROR: " + error);
             callback (error);
