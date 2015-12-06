@@ -25,7 +25,7 @@ var tweet = function (){
     var retrieverBtn = $('button.tweet-button');
     retrieverBtn.on('click', function(){
         //var image = $('img[data-imgid='+ this.dataset.imgid + ']');
-        var inputBox = $('input[data-imgid='+ this.dataset.imgid + ']')[0];
+        var inputBox = $('textarea[data-imgid='+ this.dataset.imgid + ']')[0];
         var imgid = this.dataset.imgid;
         $.ajax({
             type: 'POST',
@@ -33,7 +33,7 @@ var tweet = function (){
             data:
             {
               imageid : this.imgid,
-              text : inputBox.value
+              text : $.trim($(inputBox).val())
             },
             context: this,
             dataType: 'json',

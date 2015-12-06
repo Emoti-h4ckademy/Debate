@@ -32,6 +32,10 @@ a {
   display: inline-block;
   padding: 10px;
 }
+textarea.tweet-area {
+  max-width: 510px;
+  margin: auto;
+}
 
 .spinner {
   width: 50px;

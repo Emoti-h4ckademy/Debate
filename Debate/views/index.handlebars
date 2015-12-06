@@ -15,7 +15,8 @@
     <div class="col-md-8">
       <div style="text-align: center;">
         <h3>Emotion: {{mainemotion}}</h3>
-        <input data-imgid="{{_id}}" class="form-control" id="focusedInput" type="text" value="Enter your text here...">
+        <textarea rows="2" cols="54" data-imgid="{{_id}}" class="form-control tweet-area" id="focusedInput"
+                  type="text" maxlength="118">"Write your tweet here..."</textarea>
         <div data-imgid="{{_id}}" class="buttons-row" style="padding-top: 10px;">
           <button  data-imgid="{{_id}}" class="btn btn-success emotion-retriever"
           type="button">Detect Emotion</button>
