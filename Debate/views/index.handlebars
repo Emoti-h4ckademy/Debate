@@ -16,10 +16,12 @@
       <div style="text-align: center;">
         <h3>Emotion: {{mainemotion}}</h3>
         <input data-imgid="{{_id}}" class="form-control" id="focusedInput" type="text" value="Enter your text here...">
-        <div style="padding-top: 10px;">
-          <button  id="{{_id}}" class="btn btn-success emotion-retriever"
+        <div data-imgid="{{_id}}" class="buttons-row" style="padding-top: 10px;">
+          <button  data-imgid="{{_id}}" class="btn btn-success emotion-retriever"
           type="button">Detect Emotion</button>
           <button data-imgid="{{_id}}" class="btn btn-info tweet-button" type="button">Tweet</button>
+          <div data-imgid="{{_id}}" class="tweet-status">
+          </div>
         </div>
       </div>
       <div class="ajax-response-container{{_id}} pull-left"></div>
