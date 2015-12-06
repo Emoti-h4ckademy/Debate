@@ -12,11 +12,9 @@ a {
   margin-bottom: 5px;
   padding: 15px;
 }
-
 .btn {
   margin: 5px;
 }
-
 .ok-icon, .error-icon {
   height: 40px;
   width: 40px;
@@ -29,6 +27,12 @@ a {
 .error-icon {
   background-image:url('/icons/error-icon.svg');
 }
+.error-text {
+  color: #d56464;
+  display: inline-block;
+  padding: 10px;
+}
+
 .spinner {
   width: 50px;
   height: 40px;

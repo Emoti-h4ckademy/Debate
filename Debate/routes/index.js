@@ -29,10 +29,11 @@ router.post('/tweet', function(req, res) {
 
     TwitterWorker.postTweet(text, undefined, function(error, tweet, response){
       if(error){
-        console.log(err);
-        return res.send(err);
+        console.log(JSON.stringify(error));
+        res.status(500).json(error);
+      } else{
+        res.send(tweet);
       }
-      return res.send(response);
     });
 });
 

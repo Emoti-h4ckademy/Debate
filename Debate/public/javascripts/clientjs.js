@@ -50,10 +50,18 @@ var tweet = function (){
               $('#waiting').remove();
             },
             success: function(data){
-              $('.tweet-status').filter("div[data-imgid='" + this.dataset.imgid + "']").addClass('ok-icon');
+              var tweetStatus = $('.tweet-status').filter("div[data-imgid='" + this.dataset.imgid + "']");
+              tweetStatus.removeClass('error-icon');
+              tweetStatus.addClass('ok-icon');
+              $('[class*="error"]').remove();
+
             },
             error: function(xhr, type){
-              $('.tweet-status').filter("div[data-imgid='" + this.dataset.imgid + "']").addClass('error-icon');
+              var tweetStatusBox = $('.tweet-status').filter("div[data-imgid='" + this.dataset.imgid + "']");
+              var tweetBtn = $("button[data-imgid='" + this.dataset.imgid + "']").filter(".tweet-button");
+              //var responseBox = $('.ajax-response-message').filter("div[data-imgid='" + this.dataset.imgid + "']");
+              tweetStatusBox.addClass('error-icon');
+              $('<div class="error-text">' + xhr.responseJSON[0].message + '</div>').insertAfter(tweetBtn);
               console.log('AJAX response returned and error' + JSON.stringify(xhr) + ' ' + type);
             }
         })
