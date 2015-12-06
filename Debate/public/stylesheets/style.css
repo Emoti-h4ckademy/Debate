@@ -6,3 +6,13 @@ body {
 a {
   color: #00B7FF;
 }
+
+.persona-card {
+  background-color: #F5F5F5;
+  margin-bottom: 5px;
+  padding: 15px;
+}
+
+.btn {
+  margin: 5px;
+}

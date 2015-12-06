@@ -20,3 +20,30 @@ var detectEmotionBtn = function (){
         })
     });
 };
+
+var tweet = function (){
+    var retrieverBtn = $('button.tweet-button');
+    retrieverBtn.on('click', function(){
+        //var image = $('img[data-imgid='+ this.dataset.imgid + ']');
+        var inputBox = $('input[data-imgid='+ this.dataset.imgid + ']')[0];
+        var imgid = this.dataset.imgid;
+        console.log("dataset: " + this.dataset.imgid);
+        console.log("inputbox: " + inputBox.value);
+        $.ajax({
+            type: 'POST',
+            url: '/tweet/',
+            data:
+            {
+              imageid : imgid,
+              text : inputBox.value
+            },
+            dataType: 'json',
+            success: function(data){
+                alert("Tweet posted succesfully!");
+            },
+            error: function(xhr, type){
+                alert('AJAX response returned and error' + xhr + ' ' + type);
+            }
+        })
+    });
+};

@@ -11,8 +11,8 @@ var client = new Twitter({
 exports.postTweet = function (message, image, callback) {
   client.post('statuses/update', {status: message},  function(error, tweet, response){
     if(error) console.log(error);
-    console.log("Just twitted: " + tweet);  // Tweet body.
-    console.log("Response from twitter: " + response);  // Raw response object.
+    console.log("Just twitted: " + JSON.stringify(tweet.text));  // Tweet body.
+    //console.log("Response from twitter: " + JSON.stringify(response));  // Raw response object.
     callback(error, tweet, response);
   });
 };
