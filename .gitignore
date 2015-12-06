@@ -38,3 +38,7 @@ Debate/config/default.json
 
 # Ignore folder for assets gathered for design purposes (images, css)
 Assets
+
+#Avoid uploading temporal images
+tmp/
+snapshots/

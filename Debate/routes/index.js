@@ -3,7 +3,7 @@ var ImageCtrl = require('../controllers/images');
 var TwitterWorker = require('../lib/twitterWorker');
 var router = express.Router();
 var config = require('config');
-//var ImageCtrl = require('../controllers/images');
+
 
 /* GET home page. */
 router.get('/', function(req, res) {
@@ -58,7 +58,6 @@ router.post('/tweet', function(req, res) {
       }
 
     });
-
 });
 
 
