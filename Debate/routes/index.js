@@ -39,20 +39,26 @@ router.get('/', function(req, res) {
 
 /* POST send tweet. */
 router.post('/tweet', function(req, res) {
-  var imageId = req.body.imgid;
+  var imageId = req.body.imageid;
   var text = req.body.text;
-    myOptions = ImageCtrl.getNewOptions();
-    myOptions.returnImage = true;
-    myOptions.filterHasEmotions = false;
 
-    TwitterWorker.postTweet(text, undefined, function(error, tweet, response){
+    ImageCtrl.getImageById(imageId, function(error, image){
       if(error){
         console.log(JSON.stringify(error));
         res.status(500).json(error);
-      } else{
-        res.send(tweet);
+      }else {
+        TwitterWorker.tweetWithMedia(text, image.image, function(error, tweet, response){
+          if(error){
+            console.log(JSON.stringify(error));
+            res.status(500).json(error);
+          } else{
+            res.json(tweet);
+          }
+        });
       }
+
     });
+
 });
 
 

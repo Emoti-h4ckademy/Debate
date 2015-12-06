@@ -32,7 +32,7 @@ var tweet = function (){
             url: '/tweet/',
             data:
             {
-              imageid : this.imgid,
+              imageid : imgid,
               text : $.trim($(inputBox).val())
             },
             context: this,

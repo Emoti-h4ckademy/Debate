@@ -378,6 +378,19 @@ Images.prototype.addImage = function(req, res) {
 
 };
 
+/**
+ * Gets image document from the DB for an id given
+ * @param {type} id of the image document as in database
+ * @param {type} callback (error, image)
+ * @returns {undefined}
+ */
+Images.prototype.getImageById = function (id, callback) {
+  var self = images;
+  self.imageDB.findOne({"_id" : id}, function(error, image){
+    callback(error, image);
+  });
+};
+
 /*!
  * The exports object is an instance of Oxford.
  */
