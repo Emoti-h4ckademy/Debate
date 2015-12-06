@@ -67,3 +67,22 @@ var tweet = function (){
         })
     });
 };
+
+var charactersCounter = function () {
+  var charleft = function(el){
+    var max = 118;
+    var len = $(el).val().length;
+    if (len >= max) {
+      $('.charNum').text(' you have reached the limit');
+    } else {
+      var char = max - len;
+      $('.charNum').text(char + ' characters left');
+    }
+  };
+  charleft($('.tweet-area'));
+  $('.tweet-area').focus(function(){
+      $(this).keyup(function () {
+      charleft(this);
+    });
+  });
+};

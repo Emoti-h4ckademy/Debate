@@ -19,9 +19,28 @@ dbHandler.initializeDatabase(app, function (error) {
    }
 });
 
+// helper included to debug handlebars values
+var hbs = exphbs.create({
+  // Specify helpers which are only registered on this instance.
+  helpers: {
+    debug: function(value){
+        console.log("Current Context");
+        console.log("======================");
+        console.log('value: ' + value);
+
+        if(value) {
+          console.log("Value");
+          console.log("======================");
+          console.log(value);
+        }
+     }
+  }
+});
+
 // view engine setup
 app.engine('handlebars', exphbs({defaultLayout: 'main'}));
 app.set('view engine', 'handlebars');
+
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));

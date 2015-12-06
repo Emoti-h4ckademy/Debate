@@ -32,6 +32,13 @@ a {
   display: inline-block;
   padding: 10px;
 }
+.emotion-title {
+  font-weight: bold;
+  font-size: 21px;
+}
+.charNum {
+  float: right;
+}
 textarea.tweet-area {
   max-width: 510px;
   margin: auto;

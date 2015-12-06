@@ -6,5 +6,6 @@
       "CONSUMER_SECRET" : "YOUR CONSUMER SECRET",
       "ACCESS_TOKEN_KEY" : "YOUR ACCES TOKEN KEY",
       "ACCESS_TOKEN_SECRET" : "YOUR ACCESS TOKEN SECRET"
-    }
+    },
+    "DEFAULT_HASHTAGS" : ["#h4ckademy", "#projectoxford"]
 }
