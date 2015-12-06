@@ -13,3 +13,6 @@ $ cp config/default.json.personal config/default.json
 
 - run the app:
 $ DEBUG=Debate:* npm start
+
+- run the image capturer:
+```$ npm run capture```
