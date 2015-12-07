@@ -11,7 +11,11 @@
   <h5>Persona: {{persona}}</h5>
   <div class="row">
     <div class="col-md-4">
-      <img data-imgid="{{_id}}" class="image" style="max-width: 98%; max-height: 166px;" src="data:image/jpg; base64,{{image}}"/>
+      {{#if tranformedImage}}
+        <img data-imgid="{{_id}}" class="image" style="max-width: 98%; max-height: 166px;" src="data:image/jpg; base64,{{tranformedImage}}"/>
+      {{else}}
+        <img data-imgid="{{_id}}" class="image" style="max-width: 98%; max-height: 166px;" src="data:image/jpg; base64,{{image}}"/>
+      {{/if}}
     </div>
     <div class="col-md-8">
       <div style="text-align: center;">
