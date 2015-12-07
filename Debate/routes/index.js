@@ -1,6 +1,7 @@
 var express = require('express');
 var ImageCtrl = require('../controllers/images');
 var TwitterWorker = require('../lib/twitterWorker');
+var ImageTransformation = require('../lib/imageTransformation');
 var router = express.Router();
 var config = require('config');
 
@@ -49,9 +50,11 @@ router.post('/emotiondetect', function(req, res) {
         res.status(500).json(error);
       }else {
         if (image.mainemotion) {
+          var scores = JSON.parse(image.emotions)[0].scores;
           res.json({
-            scores: image.emotions.scores,
-            emotion: image.mainemotion
+            scores: scores,
+            emotion: image.mainemotion,
+            tranformedImage: image.tranformedImage
           });
           return;
         }
@@ -69,22 +72,27 @@ router.post('/emotiondetect', function(req, res) {
             image.emotions = emotions;
             image.mainemotion = mainEmotion;
 
-            image.save(function (error, store) {
+            ImageTransformation.drawEmotions(new Buffer(image.image, 'base64'), emotions, function(error, tranformedImage){
+              image.tranformedImage = tranformedImage.toString('base64');
+              image.save(function (error, store) {
                 if (error) {
                     console.log("Demo error DB: "+ error);
                     res.status(500).json(error);
                 } else {
                     res.json({
-                      scores: emotions.scores,
-                      emotion: mainEmotion
+                      scores: JSON.parse(image.emotions)[0].scores,
+                      emotion: mainEmotion,
+                      tranformedImage: image.tranformedImage
                     });
-                } 
+                }
+              });
+              image.save();
             });
-        }
-      });
-    }
+          }
+        });
+      }
+    });
   });
-});
 
 /* POST send tweet. */
 router.post('/tweet', function(req, res) {

@@ -10,9 +10,14 @@ var detectEmotionBtn = function (){
             success: function(data){
                 var responseContainer = $('.ajax-response-container' + buttonId);
                 console.log(data);
-                var scores = JSON.stringify(data.scores);
+
+                $('.card' + buttonId + ' .emotion-title').html(data.emotion);
+                if(data.tranformedImage){
+                  $('.card' + buttonId + ' img').attr('src', 'data:image/jpg; base64,'+data.tranformedImage);
+                }
+
                 responseContainer.html('<h2>' + data.emotion + '</h2>' +
-                    '<div style="max-width: 564px;"><p><pre>'+ scores +'</pre></p></div>');
+                    '<div style="max-width: 564px;"><p><pre>'+ JSON.stringify(data.scores) +'</pre></p></div>');
             },
             error: function(xhr, type){
                 alert('AJAX response returned and error' + xhr + ' ' + type);
