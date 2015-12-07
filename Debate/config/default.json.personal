@@ -7,5 +7,5 @@
       "ACCESS_TOKEN_KEY" : "YOUR ACCES TOKEN KEY",
       "ACCESS_TOKEN_SECRET" : "YOUR ACCESS TOKEN SECRET"
     },
-    "DEFAULT_HASHTAGS" : ["#h4ckademy", "#projectoxford"]
+    "DEFAULT_HASHTAGS" : ["#h4ckademy", "#projectoxford", "#7DElDebateDecisivo"]
 }
