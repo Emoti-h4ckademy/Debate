@@ -8,6 +8,7 @@ var routes = require('./routes/index');
 var exphbs = require('express-handlebars');
 
 var dbHandler         = require('./lib/dbHandler');
+var config = require('config');
 
 var app = express();
 
@@ -16,10 +17,14 @@ dbHandler.initializeDatabase(app, function (error) {
    if (error) {
        console.log ("Could not initialize database. Check if MongoDB service is up");
        process.exit(1);
-   }else{
-    require('./lib/imageProcessor');
    }
 });
+
+
+var imageProcessor = require('./lib/imageProcessor');
+var snapshotDir = config.has('SNAPSHOT_DIR') ? config.get('SNAPSHOT_DIR') :  path.join(__dirname, 'snapshots');
+// run image processor in background
+imageProcessor = imageProcessor.startWatcherAndProcess( snapshotDir );
 
 // helper included to debug handlebars values
 var hbs = exphbs.create({
@@ -41,8 +46,7 @@ var hbs = exphbs.create({
 
 // view engine setup
 app.engine('handlebars', exphbs({defaultLayout: 'main'}));
-app.set('view engine', 'handlebars');
-
+app.set('view engine', 'handlebars'); 
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));

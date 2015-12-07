@@ -3,7 +3,7 @@ var exec = require('child_process').exec,
 var mkdirp = require('mkdirp');
 
 var laSextaStreamURL = "http://a3live-lh.akamaihd.net/i/lasexta_1@35272/master.m3u8";
-var secondsBetweenCaptures = 3;
+var secondsBetweenCaptures = 4;
 var destinationFolder = "./snapshots";
 var ffmpegCommand = "ffmpeg -i "+laSextaStreamURL+" -vf fps=1/"+secondsBetweenCaptures+" "+destinationFolder+"/out%d.png";
 
