@@ -104,7 +104,8 @@ router.post('/tweet', function(req, res) {
         console.log(JSON.stringify(error));
         res.status(500).json(error);
       }else {
-        TwitterWorker.postTweet(text, image.image, function(error, tweet, response){
+        var imageToTweet = image.tranformedImage || image.image;
+        TwitterWorker.postTweet(text, imageToTweet, function(error, tweet, response){
           if(error){
             console.log(error);
             res.status(500).json(error);
