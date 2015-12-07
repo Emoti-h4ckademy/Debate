@@ -4,15 +4,43 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
-
 var routes = require('./routes/index');
-var users = require('./routes/users');
+var exphbs = require('express-handlebars');
+
+var dbHandler         = require('./lib/dbHandler');
 
 var app = express();
 
+//Initialize database
+dbHandler.initializeDatabase(app, function (error) {
+   if (error) {
+       console.log ("Could not initialize database. Check if MongoDB service is up");
+       process.exit(1);
+   }
+});
+
+// helper included to debug handlebars values
+var hbs = exphbs.create({
+  // Specify helpers which are only registered on this instance.
+  helpers: {
+    debug: function(value){
+        console.log("Current Context");
+        console.log("======================");
+        console.log('value: ' + value);
+
+        if(value) {
+          console.log("Value");
+          console.log("======================");
+          console.log(value);
+        }
+     }
+  }
+});
+
 // view engine setup
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'jade');
+app.engine('handlebars', exphbs({defaultLayout: 'main'}));
+app.set('view engine', 'handlebars');
+
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
@@ -23,7 +51,6 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', routes);
-app.use('/users', users);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
