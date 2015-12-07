@@ -21,7 +21,7 @@
       <div style="text-align: center;">
         <div style="margin-bottom: 8px;">Emotion: <span class="emotion-title">{{mainemotion}}</span><span class="charNum" data-imgid="{{_id}}"></span></div>
         <textarea rows="2" cols="54" data-imgid="{{_id}}" class="form-control tweet-area" id="focusedInput"
-                  type="text" maxlength="118">{{mainemotion}} {{tagify persona}} {{../hashtags}}</textarea>
+                  type="text" maxlength="118">{{tagify persona}} {{tagify mainemotion}} {{../hashtags}}</textarea>
         <div data-imgid="{{_id}}" class="buttons-row" style="padding-top: 10px;">
           <button  data-imgid="{{_id}}" class="btn btn-success emotion-retriever"
           type="button">Detect Emotion</button>

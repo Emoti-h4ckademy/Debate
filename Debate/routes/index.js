@@ -32,8 +32,11 @@ router.get('/', function(req, res) {
                   }
                },
                tagify: function(value){
-                 value = value.replace(' ', '');
-                 return '#' + value;
+                 if(value){
+                   return '#' + value.replace(' ', '');
+                 }else{
+                   return '';
+                 }
                }
           }});
         }
