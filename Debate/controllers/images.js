@@ -250,6 +250,7 @@ Images.prototype._generateMongoDBParameters = function (options, callback) {
 
         if (optionsSet.returnImage) {
             fields += ' image';
+            fields += ' tranformedImage';
         }
 
         var conditions = (conditionsV.length ? {$and : conditionsV} : {});

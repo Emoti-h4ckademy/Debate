@@ -1,51 +1,134 @@
-describe('Twitter functionality', function () {
-  var twitter = require('../../lib/twitterWorker');
-  var download = require('../../lib/files').download;
+/* global expect */ 
+console.log = function() {}; //Disable logs
 
-  beforeEach(function(done){
-      var src = 'http://lorempixel.com/300/300/';
-      var imageSample = './spec/lib/sample.png';
-
-      download( src, imageSample , function () {
-          done();
-      });
-  });
-
-  it('should return a white4x4.png base64 image when prepareimage', function(done){
-        var file = './spec/lib/white4x4.png';
-        var fixture = 'iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAIAAAAmkwkpAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH3wwEEAQDhG1JwgAAABl0RVh0Q29tbWVudABDcmVhdGVkIHdpdGggR0lNUFeBDhcAAAAUSURBVAjXY/z//z8DDDAxIAHcHACWbgMF2hiSxQAAAABJRU5ErkJggg==';
-
-        twitter.prepareAnImageAsBase64(file, function(err, data){
-            expect(data).toEqual( fixture );
+describe('twitterWorker - _tweetStatus', function () {
+    var TwitterLib = require('twitter');
+    var twitter = require('../../lib/twitterWorker');
+    var oldTPost;
+    
+    beforeAll(function() {
+        oldTPost = TwitterLib.prototype.post.bind(TwitterLib);
+        TwitterLib.prototype.post = function (url, params, callback){
+            callback (false, "Data", "Response");
+        };
+    });
+    
+    afterAll(function() {
+        TwitterLib.prototype.post = oldTPost.bind(TwitterLib);
+    });
+    
+    
+    it('Should post a correct status to Twitter', function(done){
+        twitter._tweetStatus("My message", {}, function (error, tweet){
+           expect(error).toBeFalsy();
+           done();
+        });
+    });
+    
+    it('Should fail with an empty message', function(done){
+        twitter._tweetStatus(null, {}, function (error, tweet){
+           expect(error).toBeTruthy();
+           done();
+        });
+    });
+    
+    it('Should be OK with an empty string', function(done){
+        twitter._tweetStatus("", {}, function (error, tweet){
+           expect(error).toBeFalsy();
+           done();
+        });
+    });
+    
+    it('Should fail with a int as message', function(done){
+        twitter._tweetStatus(8, {}, function (error, tweet){
+           expect(error).toBeTruthy();
+           done();
+        });
+    });
+    
+    it('Should accept empty options', function(done){
+        twitter._tweetStatus("My message", null, function (error, tweet){
+           expect(error).toBeFalsy();
+           done();
+        });
+    });
+    
+    it('Should accept options for twitter and respect them', function(done){
+        oldTPost = TwitterLib.prototype.post.bind(TwitterLib);
+        var included = false;
+        TwitterLib.prototype.post = function (url, params, callback){
+            if (params['possibly_sensitive'] === true) included = true;
+            callback (false, "Data", "Response");
+        };
+        
+        twitter._tweetStatus("My message", {possibly_sensitive : true}, function (error, tweet){
+            expect(error).toBeFalsy();
+            expect(included).toBeTruthy();
+            TwitterLib.prototype.post = oldTPost.bind(TwitterLib);
             done();
         });
+    });
+    
+    it('Should fail with a int as options', function(done){
+        twitter._tweetStatus("My message", 5, function (error, tweet){
+           expect(error).toBeTruthy();
+           done();
+        });
+    });
+});
 
-  });
-
-
-  it('should upload an image to twitter and have a media_id', function(done){
-
-      var imageSample = './spec/lib/sample.png';
-
-      twitter.uploadImage( imageSample, function(err, data){
-          expect(data.media_id).toBeDefined();
-          done();
-      });
-  });
-
-
-  it('should be able to tweet a message with picture', function(done){
-
-      var date = new Date();
-      var imageSample = './spec/lib/sample.png';
-
-      twitter.postTweet( " picture at " + date, imageSample, function( err, tweet ) {
-         // console.log(tweet);
-          expect(tweet.entities.media).toBeDefined();
-          done();
-      });
-
-
-  });
-
+describe('twitterWorker - _tweetMedia', function () {
+    var TwitterLib = require('twitter');
+    var twitter = require('../../lib/twitterWorker');
+    var oldTPost;
+//    var base64Image = 'iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAIAAAAmkwkpAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH3wwEEAQDhG1JwgAAABl0RVh0Q29tbWVudABDcmVhdGVkIHdpdGggR0lNUFeBDhcAAAAUSURBVAjXY/z//z8DDDAxIAHcHACWbgMF2hiSxQAAAABJRU5ErkJggg==';
+    var base64Image = "aaaa";
+            
+    beforeAll(function() {
+        oldTPost = TwitterLib.prototype.post.bind(TwitterLib);
+        TwitterLib.prototype.post = function (url, params, callback){
+            callback (false, "Data", "Response");
+        };
+    });
+    
+    afterAll(function() {
+        TwitterLib.prototype.post = oldTPost.bind(TwitterLib);
+    });
+    
+    it('Should be OK with correct values', function(done){
+        twitter._tweetMedia(base64Image, function(error, twitterMediaID){
+            expect(error).toBeFalsy();
+            done();
+        });
+    });
+    
+    it('Should fail with empty media', function(done){
+        twitter._tweetMedia(null, function(error, twitterMediaID){
+            expect(error).toBeTruthy();
+            done();
+        });
+    });
+    
+    it('Should fail with invalid media', function(done){
+        twitter._tweetMedia(88888, function(error, twitterMediaID){
+            expect(error).toBeTruthy();
+            done();
+        });
+    });
+    
+    it('Should return media value from Twitter', function(done){
+        oldTPost = TwitterLib.prototype.post.bind(TwitterLib);
+        var myID = "potato";
+        TwitterLib.prototype.post = function (url, params, callback){
+            callback (false, {media_id_string : myID}, "Response");
+        };
+        
+        twitter._tweetMedia(base64Image, function(error, twitterMediaID){
+            expect(error).toBeFalsy();
+            expect(twitterMediaID).toBe(myID);
+            TwitterLib.prototype.post = oldTPost.bind(TwitterLib);
+            done();
+        });
+    });
+    
 });

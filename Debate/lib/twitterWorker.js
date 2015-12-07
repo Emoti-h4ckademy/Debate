@@ -12,29 +12,35 @@ var twitter = new Twitter({
  * Posts a new status in the user account
  * @param {type} message - Message to be posted
  * @param {type} options - Options to be used, such as media
- * @param {type} callback (error)
+ * @param {type} callback (error, tweet)
  * @returns {undefined}
  */
 exports._tweetStatus = function (message, options, callback){
-    if (!message || !options || !callback) {
+    options = options || {};
+    if (typeof(message) !== "string" || typeof(options) !== "object") {
         callback ("Invalid parameters");
         return;
     }
     options.status = message;
     console.log("Tweeting: " + JSON.stringify(options));
     twitter.post('statuses/update', options,  function(error, tweet){
-        callback(error);
+        callback(error, tweet);
     });
 };
 
 /**
  * Posts media to Twitter to be used later
- * @param {type} image - Raw image
- * @param {type} callback (error, twitterMediaID
+ * @param {type} image - Base64 image
+ * @param {type} callback (error, twitterMediaID)
  * @returns {undefined}
  */
 exports._tweetMedia = function(image, callback){
-    twitter.post('media/upload', {media: image},  function(error, media, response){
+    if (!image || typeof(image) !== "string") {
+        callback("Invalid image");
+        return;
+    }
+    
+    twitter.post('media/upload', {media_data: image},  function(error, media, response){
         callback(error, media.media_id_string);
     });
 };
@@ -42,23 +48,21 @@ exports._tweetMedia = function(image, callback){
 /**
  * Post a new Status in the user account
  * @param {type} message - Status message
- * @param {type} image - Image to be posted. Use undefined or raw image
- * @param {type} callback (error)
+ * @param {type} image - Image to be posted. Use undefined or base64 image
+ * @param {type} callback (error, tweet)
  * @returns {undefined}
  */
 exports.postTweet = function (message, image, callback) {
     var self = this;
-    var options  = {};
 
     if (!image) {
-        self._tweetStatus(message, options, callback);
+        self._tweetStatus(message, {}, callback);
     } else {
         self._tweetMedia(image, function (error, mediaString) {
             if (error) {
-                callback(error);
+                callback("Tweet media error: " + error);
                 return;
             }
-            options.media_ids = mediaString;
             self._tweetStatus(message, {"media_ids" : mediaString}, callback);
         });
     }

@@ -23,7 +23,7 @@ describe("Image model testing:", function() {
       dbHandler.closeConnection();
     });
 
-    it("It saves correctly a document in database", function(done) {
+    xit("It saves correctly a document in database", function(done) {
         imObject.save(function (error) {
           expect(error).toBeFalsy();
           done();
