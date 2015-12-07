@@ -236,7 +236,7 @@ Images.prototype._generateMongoDBParameters = function (options, callback) {
         var fields = 'persona date emotions mainemotion';
         var options = { limit : optionsSet.queryLimit};
         if (optionsSet.sortDate) {
-            options.sort = [['date', optionsSet.sortDate]];
+            options.sort = {'date': optionsSet.sortDate};
         }
 
         if (optionsSet.filterHasEmotions) {
@@ -273,7 +273,6 @@ Images.prototype.getImages = function (options, callback) {
             callback (error, []);
             return;
         }
-
         self.imageDB.find(conditions, fields, options, function (error, images) {
                 callback(error, images);
                 return;
