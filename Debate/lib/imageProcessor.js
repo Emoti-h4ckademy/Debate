@@ -21,34 +21,19 @@ watcher
                     console.log("Demo error");
                 } else {
                     var myimage = data.toString('base64');
-                    imageController.oxfordLib.recognizeImageB64(data, function(error, emotions) {
-                        if (error) {
-                            console.log("Demo: No emotions detected. Error: "+ error);
-                            return;
-                        } else {
-
-                            var mainEmotionObj = imageController.oxfordLib.extractMainEmotion(emotions);
-                            var mainEmotion = mainEmotionObj.emotion;
-
-                            console.log("DEMO: Image recognition: " + mainEmotion + " (" + emotions + ")");
-
-                            var newImage = new imageController.imageDB({
-                                persona:    "Demo",
-                                date:        new Date(),
-                                image:       myimage,
-                                emotions:    emotions,
-                                mainemotion: mainEmotion
-                            });
-
-                            newImage.save(function (error, store) {
-                                if (error) {
-                                    console.log("Demo error DB: "+ error);
-                                } else {
-                                    console.log("DEMO: New image added");
-                                } 
-                            });
-                        }
+                    var newImage = new imageController.imageDB({
+                        persona:    "h4ckademy power",
+                        date:        new Date(),
+                        image:       myimage
                     });
+
+                    newImage.save(function (error, store) {
+                        if (error) {
+                            console.log("Demo error DB: "+ error);
+                        } else {
+                            console.log("DEMO: New image added", path);
+                        } 
+                    });    
                 }
             });
         }
