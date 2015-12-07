@@ -104,7 +104,9 @@ ImageTransformation.prototype._drawFace = function (image, face, callback) {
     rectangle ['y1'] = rectangle.y0 + rectangle.sizeY;
     
     var tempImage = gm(image, 'memory.jpg')
-        .fill("#262721") //H4 Logo color: #262721
+        .fill("#ABDF3C") //Green
+        .stroke("#ABDF3C")
+        .strokeWidth(4)
         .drawLine(points.toplx, points.toply, points.toprx, points.topry)
         .drawLine(points.toplx, points.toply, points.bottomlx, points.bottomly)
         .drawLine(points.toprx, points.topry, points.bottomrx, points.bottomry)
@@ -141,6 +143,8 @@ ImageTransformation.prototype._drawFace = function (image, face, callback) {
                 .fill("#262721")
                 .drawRectangle(rectangle.x0, rectangle.y0, rectangle.x1, rectangle.y1, rectangle.cornerw, rectangle.cornerh)
                 .fill("#D4FCC8")
+                .stroke("#D4FCC8")
+                .strokeWidth(1)
                 .fontSize( myFontSize )
                 .drawText(rectangle.x0 + rectangle.cornerw, rectangle.y0 + self.fontSize + rectangle.cornerh, emotionString)
                 .toBuffer('JPG', function (error, buffer) {
