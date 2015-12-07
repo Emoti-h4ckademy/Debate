@@ -1,17 +1,17 @@
 var detectEmotionBtn = function (){
     var retrieverBtn = $('button.emotion-retriever');
     retrieverBtn.on('click', function(){
-        var buttonId = this.id;
+        var buttonId = this.dataset.imgid;
         $.ajax({
             type: 'POST',
-            url: '/api/images/emotiondetect/' + buttonId,
-            data: {  },
+            url: '/emotiondetect/',
+            data: { imageid : buttonId },
             dataType: 'json',
             success: function(data){
                 var responseContainer = $('.ajax-response-container' + buttonId);
-                //console.log(JSON.stringify(data.scores, null, ''));
-                var scores = JSON.stringify(data[0].scores);
-                responseContainer.html('<h2>' + data[0].emotion + '</h2>' +
+                console.log(data);
+                var scores = JSON.stringify(data.scores);
+                responseContainer.html('<h2>' + data.emotion + '</h2>' +
                     '<div style="max-width: 564px;"><p><pre>'+ scores +'</pre></p></div>');
             },
             error: function(xhr, type){

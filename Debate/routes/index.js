@@ -13,6 +13,7 @@ router.get('/', function(req, res) {
     ImageCtrl.getImages(myOptions, function(error, allImages){
         if (error) {
             console.log("FAILURE RETRIEVING IMAGES");
+            console.log(error);
         } else {
             res.render('index', { myimages : allImages, hashtags : config.get('DEFAULT_HASHTAGS').join(' '),
             helpers: {
@@ -35,6 +36,54 @@ router.get('/', function(req, res) {
         }
     });
 
+});
+
+/* POST send image to Oxford to detect emotions. */
+router.post('/emotiondetect', function(req, res) {
+  var imageId = req.body.imageid;
+  console.log("Emotion detection for image ", imageId);
+
+    ImageCtrl.getImageById(imageId, function(error, image){
+      if(error){
+        console.log(JSON.stringify(error));
+        res.status(500).json(error);
+      }else {
+        if (image.mainemotion) {
+          res.json({
+            scores: image.emotions.scores,
+            emotion: image.mainemotion
+          });
+          return;
+        }
+        console.log("Image in DB, now detecting emotions...");
+        ImageCtrl.oxfordLib.recognizeImageB64(image.image, function(error, emotions) {
+          if (error) {
+              console.log("Demo: No emotions detected. Error: "+ error);
+              res.status(500).json(error);
+          }else{
+            var mainEmotionObj = ImageCtrl.oxfordLib.extractMainEmotion(emotions);
+            var mainEmotion = mainEmotionObj.emotion;
+
+            console.log("DEMO: Image recognition: " + mainEmotion + " (" + emotions + ")");
+
+            image.emotions = emotions;
+            image.mainemotion = mainEmotion;
+
+            image.save(function (error, store) {
+                if (error) {
+                    console.log("Demo error DB: "+ error);
+                    res.status(500).json(error);
+                } else {
+                    res.json({
+                      scores: emotions.scores,
+                      emotion: mainEmotion
+                    });
+                } 
+            });
+        }
+      });
+    }
+  });
 });
 
 /* POST send tweet. */
