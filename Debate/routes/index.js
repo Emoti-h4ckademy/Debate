@@ -47,9 +47,9 @@ router.post('/tweet', function(req, res) {
         console.log(JSON.stringify(error));
         res.status(500).json(error);
       }else {
-        TwitterWorker.tweetWithMedia(text, image.image, function(error, tweet, response){
+        TwitterWorker.postTweet(text, image.image, function(error, tweet, response){
           if(error){
-            console.log(JSON.stringify(error));
+            console.log(error);
             res.status(500).json(error);
           } else{
             res.json(tweet);
