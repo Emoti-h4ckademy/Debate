@@ -12,6 +12,7 @@ var detectEmotionBtn = function (){
                 console.log(data);
 
                 $('.card' + buttonId + ' .emotion-title').html(data.emotion);
+                $('.card' + buttonId + ' textarea').val($('.card' + buttonId + ' textarea').val()+' #' + data.emotion.replace(' ', ''));
                 if(data.tranformedImage){
                   $('.card' + buttonId + ' img').attr('src', 'data:image/jpg; base64,'+data.tranformedImage);
                 }
