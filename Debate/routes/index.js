@@ -11,6 +11,8 @@ router.get('/', function(req, res) {
     myOptions = ImageCtrl.getNewOptions();
     myOptions.returnImage = true;
     myOptions.filterHasEmotions = false;
+    myOptions.sortDate = 'desc';
+    myOptions.queryLimit = 30;
     ImageCtrl.getImages(myOptions, function(error, allImages){
         if (error) {
             console.log("FAILURE RETRIEVING IMAGES");

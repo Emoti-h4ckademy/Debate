@@ -10,7 +10,7 @@ function ImageTransformation () {
     /**
      * Font size in the image
      */
-    this.fontSize = 13;
+    this.fontSize = 18;
     /**
      * Temporal directory used during the composition of the final image
      */
