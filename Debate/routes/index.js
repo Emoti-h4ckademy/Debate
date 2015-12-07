@@ -78,19 +78,24 @@ router.post('/emotiondetect', function(req, res) {
             image.mainemotion = mainEmotion;
 
             ImageTransformation.drawEmotions(new Buffer(image.image, 'base64'), emotions, function(error, tranformedImage){
-              image.tranformedImage = tranformedImage.toString('base64');
-              image.save(function (error, store) {
-                if (error) {
-                    console.log("Demo error DB: "+ error);
+              if (error){
+                    console.log("ImageTransformation: "+ error);
                     res.status(500).json(error);
-                } else {
-                    res.json({
-                      scores: JSON.parse(image.emotions)[0].scores,
-                      emotion: mainEmotion,
-                      tranformedImage: image.tranformedImage
-                    });
-                }
-              });
+              } else {
+                image.tranformedImage = tranformedImage.toString('base64');
+                image.save(function (error, store) {
+                  if (error) {
+                      console.log("Demo error DB: "+ error);
+                      res.status(500).json(error);
+                  } else {
+                      res.json({
+                        scores: JSON.parse(image.emotions)[0].scores,
+                        emotion: mainEmotion,
+                        tranformedImage: image.tranformedImage
+                      });
+                  }
+                });
+              }
               image.save();
             });
           }
