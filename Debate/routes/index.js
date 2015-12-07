@@ -32,7 +32,6 @@ router.get('/', function(req, res) {
                   }
                },
                tagify: function(value){
-
                  if(value){
                    return '#' + value.replace(' ', '');
                  }else{

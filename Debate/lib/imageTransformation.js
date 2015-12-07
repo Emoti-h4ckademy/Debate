@@ -32,14 +32,14 @@ ImageTransformation.prototype.drawEmotions = function (image, emotionResponse, c
     }
     
     var faces = JSON.parse(emotionResponse);
-    var myIterator = -1;
+    var myIterator = faces.length;
     var myForFunction = function (error, newBuffer) {
-        myIterator++;
+        myIterator--;
         if (error) {
             callback (error);
         }
 
-        if (myIterator === faces.length) {
+        if (myIterator === -1) {
             self._drawBug(newBuffer, function(error, finalImage){
                 callback (error, finalImage);
             });
