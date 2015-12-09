@@ -146,7 +146,8 @@ ImageTransformation.prototype._drawFace = function (image, face, callback) {
                 .stroke("#D4FCC8")
                 .strokeWidth(1)
                 .fontSize( myFontSize )
-                .drawText(rectangle.x0 + rectangle.cornerw, rectangle.y0 + self.fontSize + rectangle.cornerh, emotionString)
+                .font("./res/fonts/opensans-light.ttf")
+                .drawText(rectangle.x0 + rectangle.cornerw*2, rectangle.y0 + self.fontSize + rectangle.cornerh*2, emotionString)
                 .toBuffer('JPG', function (error, buffer) {
                     callback (error, buffer);
                 });
