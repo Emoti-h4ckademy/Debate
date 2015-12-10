@@ -6,6 +6,11 @@ function Project() {
     this.projectDB  = require('../models/project');
 }
 
+Project.prototype.getProjects = function (callback) {
+    this.projectDB.find().
+            exec(callback);
+};
+
 Project.prototype.create = function (name, callback) {
     var self = this;
     
