@@ -7,8 +7,21 @@ function Project() {
 }
 
 Project.prototype.create = function (name, callback) {
+    var self = this;
     
-    callback(/*error, generatedDocumet*/true);
+    var project = new self.projectDB({
+        name:   name,
+        trainedStatus: "no"
+    });
+    
+    project.save(function (error, data) {
+       if (error) {
+           console.log("Project save ("+name+") ERROR:" + error);
+       } else {
+           console.log("Project save ("+name+") success");
+       }
+       callback (error, data);
+    });
 };
 
 Project.prototype._generatePersonGroupID = function (projectID, callback) {
