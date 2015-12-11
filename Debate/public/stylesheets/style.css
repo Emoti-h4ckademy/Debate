@@ -7,6 +7,17 @@ a {
   color: #00B7FF;
 }
 
+#logos {
+  display: inline-block;
+  float: left;
+}
+#logos img {
+    max-height: 50px;
+}
+
+.topnavbar {
+  background-color: #272823;
+}
 .persona-card {
   background-color: #F5F5F5;
   margin-bottom: 5px;
