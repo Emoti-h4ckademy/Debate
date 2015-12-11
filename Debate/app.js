@@ -11,6 +11,8 @@ var dbHandler         = require('./lib/dbHandler');
 
 var app = express();
 
+app.use(require('easy-livereload')());
+
 //Initialize database
 dbHandler.initializeDatabase(app, function (error) {
    if (error) {
