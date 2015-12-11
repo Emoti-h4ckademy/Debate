@@ -7,16 +7,18 @@
   ffmpeg: http://www.ffmpeg.org/download.html or ```brew install ffmpeg```
   graphicsmagick: http://www.graphicsmagick.org/
 
-- install Gnu/Linux
 
+### GNU/Linux Generic install
 ```
 apt-get install libkrb5-dev ffmpeg graphicsmagick mogodb
 
 ```
 
-ffmpeg it's available up to Debian 8 Jessie, so for Jessie users it's needed to install libav-tools
-# https://wiki.debian.org/ffmpeg
-apt-get install libav-tools 
+### Debian 8 aka Jessie 
+ffmpeg it's available up to Debian 8 Jessie, so for Jessie users it's needed to install libav-tools. For more details see  https://wiki.debian.org/ffmpeg
+
+apt-get install libkrb5-dev libav-tools graphicsmagick mogodb
+sudo ln -s /usr/bin/avconv /usr/bin/ffmpeg
 
 - install dependencies:
 ```
