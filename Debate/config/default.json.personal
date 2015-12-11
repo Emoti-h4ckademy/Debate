@@ -1,11 +1,15 @@
 {
-    "OXFORD_EMOTION_API_KEY": "HERE GOES YOUR API KEY",
-    "OXFORD_EMOTION_URL": "https://api.projectoxford.ai/emotion/v1.0/recognize",
+    "OXFORD_EMOTION_API_KEY":       "HERE GOES YOUR EMOTION API KEY",
+    "OXFORD_EMOTION_URL":           "https://api.projectoxford.ai/emotion/v1.0/recognize",
+    "OXFORD_FACE_API_KEY":          "HERE GOES YOUR FACE API KEY",
+    "OXFORD_FACE_DETECTION_URL":    "https://api.projectoxford.ai/face/v0/detections",
+    "OXFORD_PERSON_URL":            "https://api.projectoxford.ai/face/v0/persongroups",
+
     "TWITTER_KEYS" : {
-      "CONSUMER_KEY" : "YOUR CONSUMER KEY",
-      "CONSUMER_SECRET" : "YOUR CONSUMER SECRET",
-      "ACCESS_TOKEN_KEY" : "YOUR ACCES TOKEN KEY",
-      "ACCESS_TOKEN_SECRET" : "YOUR ACCESS TOKEN SECRET"
+      "CONSUMER_KEY" :              "YOUR CONSUMER KEY",
+      "CONSUMER_SECRET" :           "YOUR CONSUMER SECRET",
+      "ACCESS_TOKEN_KEY" :          "YOUR ACCES TOKEN KEY",
+      "ACCESS_TOKEN_SECRET" :       "YOUR ACCESS TOKEN SECRET"
     },
-    "DEFAULT_HASHTAGS" : ["#h4ckademy", "#projectoxford", "#7DElDebateDecisivo"]
+    "DEFAULT_HASHTAGS" : ["#h4ckademy", "#projectoxford"]
 }

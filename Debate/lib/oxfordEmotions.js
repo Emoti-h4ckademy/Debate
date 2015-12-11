@@ -2,7 +2,7 @@ var config = require('config'),
     request = require('request');
 
 /**
- * Oxford constructor.
+ * OxfordEmotion constructor.
  *
  * The exports object of the `oxford` module is an instance of this class.
  * Most apps will only use this one instance.
@@ -10,9 +10,9 @@ var config = require('config'),
  * @api public
  */
 
-function Oxford () {
-    this.oxfordApiKey = process.env.OXFORD_EMOTION_API_KEY || config.get('OXFORD_EMOTION_API_KEY');
-    this.oxfordUrl = process.env.OXFORD_EMOTION_URL || config.get('OXFORD_EMOTION_URL');
+function OxfordEmotion () {
+    this.apiKey = process.env.OXFORD_EMOTION_API_KEY || config.get('OXFORD_EMOTION_API_KEY');
+    this.url = process.env.OXFORD_EMOTION_URL || config.get('OXFORD_EMOTION_URL');
     /**
      * Response when either an error is found or no emotions are detected
      */
@@ -24,13 +24,13 @@ function Oxford () {
 }
 
 /**
- * Extract the main emotion from a PARSED Oxford Response
+ * Extract the main emotion from a PARSED Oxford Emotion Response
  * @param {type} responseObj PARSED response
  * @param {type} position Select which of the faces in the response to calculate
  * @returns JSON in the form {emotion: String, max: number}
  *  if there's an error it returns this.emptyEmotion
  */
-Oxford.prototype.extractMainEmotion = function(responseObj, position) {
+OxfordEmotion.prototype.extractMainEmotion = function(responseObj, position) {
     position = position || 0;
     
     if ((!responseObj) || (responseObj === this.emptyResponse))
@@ -63,14 +63,14 @@ Oxford.prototype.extractMainEmotion = function(responseObj, position) {
 };
 
 /**
- * Parses the response of the Oxford API returning to check for errors
+ * Parses the response of the Oxford Emotion API returning to check for errors
  * @param {type} response - Response from the API
  * @param {type} callback - Function to be callback (error, emotionArray)
  * If an error is found, error will contain an error message an emotionArray will
  * be equal to emptyResponse
  * @returns {undefined}
  */
-Oxford.prototype._parseResponse = function (response, callback) {
+OxfordEmotion.prototype._parseResponse = function (response, callback) {
     var emotion;
     var err;
     
@@ -98,24 +98,24 @@ Oxford.prototype._parseResponse = function (response, callback) {
 };
 
 /**
- * Handles the comunication with the API
+ * Handles the comunication with the Oxford Emotion API
  * @param {type} image Image to be sent
  * @param {type} callback (error, emotionArray). This function internally
  * will call _parseResponse so refer to its documentation for the callback
  * @returns {undefined}
  */
-Oxford.prototype._getEmotion = function (image, callback) {
+OxfordEmotion.prototype._getEmotion = function (image, callback) {
     var self = this;    
     var oxfordContentType = "application/octet-stream";
 
     return request({
-        url: self.oxfordUrl,
+        url: self.url,
         method: "POST",
         json: false,
         body: image,
         headers: {
                 "content-type" : oxfordContentType,
-                "Ocp-Apim-Subscription-Key" : self.oxfordApiKey
+                "Ocp-Apim-Subscription-Key" : self.apiKey
             }
         }, function (error, response, body) {
             if (error) {
@@ -128,14 +128,14 @@ Oxford.prototype._getEmotion = function (image, callback) {
 };
 
 /**
- *
+ * Analyzes an image emotions
  * @param {type} imageB64 Image to be check in base64
  * @param {type} callback Function to be callback (error, emotionArray)
  * If an error is found, error will contain an error message an emotionArray will
  * be equal to emptyResponse
  * @returns {undefined}
  */
-Oxford.prototype.recognizeImageB64 = function (imageB64, callback) {
+OxfordEmotion.prototype.recognizeImageB64 = function (imageB64, callback) {
     var self = this;
     
     if (!imageB64) {
@@ -148,9 +148,9 @@ Oxford.prototype.recognizeImageB64 = function (imageB64, callback) {
 };
 
 /*!
- * The exports object is an instance of Oxford.
+ * The exports object is an instance of OxfordEmotion.
  *
  * @api public
  */
 
-var oxford = module.exports = exports = new Oxford();
+module.exports = new OxfordEmotion();
