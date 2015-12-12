@@ -9,7 +9,7 @@ var personImageSchema = new Schema({
 });
 
 var personSchema = new Schema({
-    projectID :         { type: String, required: true }, //Database id of the related project in the DB
+    //trainingID :         { type: String, required: true }, //Database id of the related project in the DB
     name :              { type: String, required: true },
     faces :             { type: [personImageSchema], required: true},
     //Oxford

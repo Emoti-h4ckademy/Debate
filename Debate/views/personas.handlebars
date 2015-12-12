@@ -1,0 +1,15 @@
+<div class="wrapper container">
+  <div class="row"><h4 class="main-title">Persons created in Oxford</h4></div>
+<div class="addelementrow">
+  {{> addpersondiv}}
+</div>
+  <ul class="elements-list">
+    {{#each personas}}
+    <li data-projid="{{_id}}">
+      <div>
+        <b>Nombre:</b> {{name}}
+      </div>
+    </li>
+    {{/each}}
+  </ul>
+</div>

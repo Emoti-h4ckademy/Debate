@@ -8,7 +8,6 @@ function OxfordFace() {
     this.apiKey         = config.get('OXFORD_FACE_API_KEY');
     this.faceBaseUrl    = config.get('OXFORD_FACE_DETECTION_URL');
     this.personBaseUrl  = config.get('OXFORD_PERSON_URL');
-    
 }
 /*
  * Good response body: As we do not ask for any options
@@ -29,7 +28,7 @@ function OxfordFace() {
 OxfordFace.prototype._parseGetFaceResponse = function (response, callback) {
     var faces;
     var error;
-    
+
     if (!response) {
         callback ("Empty response");
         return;
@@ -46,7 +45,7 @@ OxfordFace.prototype._parseGetFaceResponse = function (response, callback) {
 };
 
 OxfordFace.prototype._getFaces = function (binaryImage, callback) {
-    var self = this;    
+    var self = this;
     var urlPlusOptions = self.faceBaseUrl; //No extra options
 
     return request({
@@ -60,7 +59,7 @@ OxfordFace.prototype._getFaces = function (binaryImage, callback) {
             }
         }, function (error, response, body) {
             if (error) {
-                callback ("Couldn't reach Oxford Service server");
+                callback (error);
             }
             else {
                 self._parseGetFaceResponse(response, callback);
@@ -76,19 +75,17 @@ OxfordFace.prototype._getFaces = function (binaryImage, callback) {
  */
 OxfordFace.prototype.detectFaces = function (binaryImage, callback) {
     var self = this;
-    
+
     if (!binaryImage) {
         callback("Empty image");
         return;
     }
-    
+
     self._getFaces(binaryImage, callback);
 };
 
-
-
-
 OxfordFace.prototype.createPerson = function (/*parameteres*/callback) {
+
     callback (/*error, oxfordPersonID*/true);
 };
 
@@ -133,17 +130,17 @@ OxfordFace.prototype.createPersonGroup = function (personGroupID, callback) {
 };
 
 OxfordFace.prototype.trainProject = function (/*parameteres*/callback) {
-    
+
     callback (/*error, status*/true);
 };
 
 OxfordFace.prototype.checkProjectStatus = function (/*parameteres*/callback) {
-    
+
     callback (/*error, status*/true);
 };
 
 OxfordFace.prototype.identifyPersona = function (/*parameteres*/callback) {
-    
+
     callback (/*error, persona*/true);
 };
 

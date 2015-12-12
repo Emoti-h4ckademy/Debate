@@ -1,0 +1,39 @@
+<script type="text/javascript">
+var displayAddTraining = function (){
+    $( "#addtraining" ).slideDown();
+};
+var hideAddTraining = function () {
+  $( "#addtraining" ).slideUp();
+};
+var save = function () {
+  addTraining($('#trainingname').val(), function(error, training){
+    if(error) {
+      alert ("Error saving training: " + error);
+    } else {
+      hideAddTraining();
+      $('#trainingname').val('');
+      $('#trainingname').attr("placeholder", "Nombre del training");
+      $('.training-list').append('<li data-projid="{{_id}}"> <b>Nombre:</b> ' + training.name + ' <b>' + training.info + '</b> </li>');
+    }
+  });
+}
+</script>
+
+
+<button class="btn btn-info addprj-button" type="button" onclick="displayAddTraining()" >Crear Training</button>
+<!-- user input dialog -->
+<div style="display: none; margin-bottom: 15px;" id="addtraining">
+  <h2>Training nuevo</h2>
+
+  <p>
+    Tras guardar el training deberás añadir personas y pulsar entrenar.
+  </p>
+
+  <!-- input form. you can press enter too -->
+  <form>
+    <input id="trainingname" style="max-width: 300px; display: inline-block;" type="text" class="form-control" placeholder="Nombre del training">
+    <button type="submit" class= "btn" onclick="event.preventDefault(); save()"> Guardar </button>
+    <button type="button" class="btn" onclick="hideAddTraining()"> Cancelar </button>
+  </form>
+
+</div>

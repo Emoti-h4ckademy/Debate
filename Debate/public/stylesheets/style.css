@@ -20,14 +20,15 @@ a {
   text-align: center;
 }
 
-.addprojectrow {
+.addelementrow {
   min-height: 70px;
 }
 
-.project-list li {
+.elements-list li {
   padding: 10px;
   background-color: #F5F5F5;
   list-style-type: none;
+  margin-bottom: 10px
 }
 
 .addprj-button {

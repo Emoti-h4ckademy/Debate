@@ -6,13 +6,13 @@ var hideAddProject = function () {
   $( "#addproject" ).slideUp();
 };
 var save = function () {
-  addProject($('#nameinput').val(), function(error, project){
+  addProject($('#projectname').val(), function(error, project){
     if(error) {
       alert ("Error saving project: " + error);
     } else {
       hideAddProject();
-      $('#nameinput').val('');
-      $('#nameinput').attr("placeholder", "Nombre del proyecto");
+      $('#projectname').val('');
+      $('#projectname').attr("placeholder", "Nombre del proyecto");
       $('.project-list').append('<li data-projid="{{_id}}"> <b>Nombre:</b> ' + project.name + ' <b>' + project.info + '</b> </li>');
     }
   });
@@ -20,7 +20,7 @@ var save = function () {
 </script>
 
 
-<button class="btn btn-info addprj-button" type="button" onclick="displayAddProject()" >Add Project</button>
+<button class="btn btn-info addprj-button" type="button" onclick="displayAddProject()" >Crear Proyecto</button>
 <!-- user input dialog -->
 <div style="display: none; margin-bottom: 15px;" id="addproject">
   <h2>Proyecto nuevo</h2>
@@ -33,7 +33,7 @@ var save = function () {
 
   <!-- input form. you can press enter too -->
   <form>
-    <input id="nameinput" style="max-width: 300px; display: inline-block;" type="text" class="form-control" placeholder="Nombre del proyecto">
+    <input id="projectname" style="max-width: 300px; display: inline-block;" type="text" class="form-control" placeholder="Nombre del proyecto">
     <button type="submit" class= "btn" onclick="event.preventDefault(); save()"> Guardar </button>
     <button type="button" class="btn" onclick="hideAddProject()"> Cancelar </button>
   </form>
