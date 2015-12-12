@@ -12,14 +12,16 @@ function OxfordFace() {
 /*
  * Good response body: As we do not ask for any options
  * [
-              {
-              "faceId": "c5c24a82-6845-4031-9d5d-978df9175426",
-              "faceRectangle": {
-              "top": 54,
-              "left": 394,
-              "width": 78,
-              "height": 78
-              }
+        {
+            "faceId": "c5c24a82-6845-4031-9d5d-978df9175426",
+            "faceRectangle": {
+                "top": 54,
+                "left": 394,
+                "width": 78,
+                "height": 78
+            }
+            "attributes":{}
+        }
     ]
  */
 
@@ -81,7 +83,7 @@ OxfordFace.prototype._getFaces = function (binaryImage, callback) {
 /**
  * Analyzes an image (binary) calling oxford API
  * @param {type} binaryImage
- * @param {type} callback
+ * @param {type} callback (error, facesArray)
  * @returns {undefined}
  */
 OxfordFace.prototype.detectFaces = function (binaryImage) {
