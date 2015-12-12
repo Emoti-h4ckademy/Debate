@@ -1,3 +1,21 @@
+
+var addProject = function (projectname, callback) {
+  $.ajax({
+      type: 'POST',
+      url: '/proyectos',
+      data: { name : projectname },
+      dataType: 'json',
+      success: function(data){
+          console.log("Addproject response: " + data);
+          callback(undefined, data);
+      },
+      error: function(xhr, type){
+          console.log('AJAX response returned and error' + xhr + ' ' + type);
+          callback(JSON.parse(xhr.responseText).errmsg);
+      }
+  })
+};
+
 var detectEmotionBtn = function (){
     var retrieverBtn = $('button.emotion-retriever');
     retrieverBtn.on('click', function(){
@@ -23,7 +41,7 @@ var detectEmotionBtn = function (){
             error: function(xhr, type){
                 alert('AJAX response returned and error' + xhr + ' ' + type);
             }
-        })
+        });
     });
 };
 

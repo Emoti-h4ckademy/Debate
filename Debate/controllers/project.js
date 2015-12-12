@@ -11,14 +11,20 @@ Project.prototype.getProjects = function (callback) {
             exec(callback);
 };
 
+Project.prototype.getProjectById = function (callback) {
+    this.projectDB.findById().
+            exec(callback);
+};
+
 Project.prototype.create = function (name, callback) {
     var self = this;
-    
+
     var project = new self.projectDB({
         name:   name,
-        trainedStatus: "no"
+        trainedStatus: "no",
+        creationDate: Date.now()
     });
-    
+
     project.save(function (error, data) {
        if (error) {
            console.log("Project save ("+name+") ERROR:" + error);
@@ -30,32 +36,32 @@ Project.prototype.create = function (name, callback) {
 };
 
 Project.prototype._generatePersonGroupID = function (projectID, callback) {
-    
+
     callback(/*error, trainedStatus*/true);
 };
 
 Project.prototype.train = function (projectID, callback) {
-    
+
     callback(/*error, updatedDocument*/true);
 };
 
 Project.prototype.getTrainedStatus = function (projectID, callback) {
-    
+
     callback(/*error, trainedStatus*/true);
 };
 
 Project.prototype.analyze = function (projectID, callback) {
-    
+
     callback(/*error, trainedStatus*/true);
 };
 
 Project.prototype.getAnalysisStatus = function (projectID, callback) {
-    
+
     callback(/*error, trainedStatus*/true);
 };
 
 Project.prototype.getEmotions = function (projectID, callback) {
-    
+
     callback(/*error, trainedStatus*/true);
 };
 

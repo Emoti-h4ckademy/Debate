@@ -1,0 +1,13 @@
+<div class="wrapper container">
+  <div class="row"><h4 class="main-title">Emotion recognition analysis projects</h4></div>
+<div class="addprojectrow">
+  {{> addprojectdiv}}
+</div>
+  <ul class="project-list">
+    {{#each proyectos}}
+    <li data-projid="{{_id}}">
+      <b>Nombre:</b> {{name}} <b>{{info}}</b>
+    </li>
+    {{/each}}
+  </ul>
+</div>
