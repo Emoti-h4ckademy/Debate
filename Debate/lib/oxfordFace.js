@@ -36,17 +36,7 @@ OxfordFace.prototype._parseGetFaceResponse = function (response, callback) {
     }
 
     if (response.statusCode !== 200) {
-        error = response.statusMessage;
-        var message;
-        var code;
-        try {
-            code = JSON.parse(response.body).code;
-            message = JSON.parse(response.body).message;
-            error += "("+message+"): " + code;
-        } catch (error) {
-            message = response.body;
-            error += ": " + message;
-        }
+        error = "(" + response.statusCode + ") " + response.statusMessage;
     } else {
         error = false;
         faces = response.body;
@@ -56,9 +46,7 @@ OxfordFace.prototype._parseGetFaceResponse = function (response, callback) {
 };
 
 OxfordFace.prototype._getFaces = function (binaryImage, callback) {
-    var self = this;
-    var oxfordContentType = "application/octet-stream";
-    
+    var self = this;    
     var urlPlusOptions = self.faceBaseUrl; //No extra options
 
     return request({
@@ -67,7 +55,7 @@ OxfordFace.prototype._getFaces = function (binaryImage, callback) {
         json: false,
         body: binaryImage,
         headers: {
-                "content-type" : oxfordContentType,
+                "content-type" : "application/octet-stream",
                 "Ocp-Apim-Subscription-Key" : self.apiKey
             }
         }, function (error, response, body) {
@@ -78,7 +66,6 @@ OxfordFace.prototype._getFaces = function (binaryImage, callback) {
                 self._parseGetFaceResponse(response, callback);
             }
         });
-    
 };
 
 /**
@@ -98,14 +85,51 @@ OxfordFace.prototype.detectFaces = function (binaryImage, callback) {
     self._getFaces(binaryImage, callback);
 };
 
+
+
+
 OxfordFace.prototype.createPerson = function (/*parameteres*/callback) {
-    
     callback (/*error, oxfordPersonID*/true);
 };
 
-OxfordFace.prototype.createProject = function (/*parameteres*/callback) {
+OxfordFace.prototype._getPersonGroup = function (personGroupID, callback) {
+    var self = this;
     
-    callback (/*error, oxfordPersonGroupID*/true);
+    if (!personGroupID) {
+        return callback ("Empty personGroupID");
+    }
+    
+    var urlPlusOptions = self.personBaseUrl + "/" + personGroupID; //No extra options
+
+    return request({
+        url: urlPlusOptions,
+        method: "PUT",
+        json: {
+              "name":       personGroupID,
+              "userData":   personGroupID
+        },
+        headers: {
+                "Ocp-Apim-Subscription-Key" : self.apiKey
+            }
+        }, function (error, response, body) {
+            if (error) {
+                callback ("Couldn't reach Oxford Service server");
+            }
+            else {
+                self._parseGetFaceResponse(response, callback);
+            }
+        });
+};
+
+
+OxfordFace.prototype.createPersonGroup = function (personGroupID, callback) {
+    var self = this;
+    
+    if (!personGroupID) {
+        return callback ("Empty personGroupID");
+    }
+    
+    self._getPersonGroup(personGroupID, callback);
 };
 
 OxfordFace.prototype.trainProject = function (/*parameteres*/callback) {
