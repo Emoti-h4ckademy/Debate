@@ -1,0 +1,50 @@
+<script type="text/javascript">
+var displayAddPerson = function (){
+    $( "#addperson" ).slideDown();
+};
+var hideAddPerson = function () {
+  $( "#addperson" ).slideUp();
+};
+var clearForm = function () {
+  $('#personname').val('');
+  $('#facespath').val('');
+  $('#personname').attr("placeholder", "Nombre del person");
+  $('#facespath').attr("placeholder", "Path donde se encuentran las imágenes");
+};
+var addPerson = function () {
+  var person =
+  {
+      name : $('#personname').val(),
+      path : $('#facespath').val()
+  }
+  addPerson(person, function(error, response){
+    if(error) {
+      alert ("Error saving person: " + error);
+    } else {
+      //hideAddPerson();
+      //$('.person-list').append('<li data-projid="{{_id}}"> <b>Nombre:</b> ' + person.name + ' <b>' + person.info + '</b> </li>');
+      alert('Person saved succesfully');
+    }
+  });
+}
+</script>
+
+
+<button class="btn btn-info addprj-button" type="button" onclick="displayAddPerson()" >Crear Person</button>
+<!-- user input dialog -->
+<div style="display: none; margin-bottom: 15px;" id="addperson">
+  <h2>Person nuevo</h2>
+
+  <p>
+    Tras guardar el person deberás añadir personas y pulsar entrenar.
+  </p>
+
+  <!-- input form. you can press enter too -->
+  <form>
+    <input id="personname" style="max-width: 300px; display: inline-block;" type="text" class="form-control" placeholder="Nombre de la persona">
+    <input id="facespath" style="max-width: 300px; display: inline-block;" type="text" class="form-control" placeholder="Path donde se encuentran las imágenes">
+    <button type="submit" class= "btn" onclick="event.preventDefault(); addPerson()"> Crear Persona </button>
+    <button type="button" class="btn" onclick="hideAddPerson()"> Cancelar </button>
+  </form>
+
+</div>

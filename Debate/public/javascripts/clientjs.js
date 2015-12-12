@@ -1,3 +1,36 @@
+var addPerson = function(person, callback) {
+  $.ajax({
+      type: 'POST',
+      url: '/person',
+      data: person,
+      dataType: 'json',
+      success: function(data){
+          console.log("Addtraining response: " + data);
+          callback(undefined, data);
+      },
+      error: function(xhr, type){
+          console.log('AJAX response returned and error' + xhr + ' ' + type);
+          callback(JSON.parse(xhr.responseText).errmsg);
+      }
+  })
+};
+
+var addTraining = function (trainingname, callback) {
+  $.ajax({
+      type: 'POST',
+      url: '/proyectos',
+      data: { name : trainingname },
+      dataType: 'json',
+      success: function(data){
+          console.log("Addtraining response: " + data);
+          callback(undefined, data);
+      },
+      error: function(xhr, type){
+          console.log('AJAX response returned and error' + xhr + ' ' + type);
+          callback(JSON.parse(xhr.responseText).errmsg);
+      }
+  });
+};
 
 var addProject = function (projectname, callback) {
   $.ajax({
@@ -13,7 +46,7 @@ var addProject = function (projectname, callback) {
           console.log('AJAX response returned and error' + xhr + ' ' + type);
           callback(JSON.parse(xhr.responseText).errmsg);
       }
-  })
+  });
 };
 
 var detectEmotionBtn = function (){
