@@ -6,12 +6,14 @@ var hideAddProject = function () {
   $( "#addproject" ).slideUp();
 };
 var save = function () {
-  addProject($('#nameinput').val(), function(error){
+  addProject($('#nameinput').val(), function(error, project){
     if(error) {
-      alert ("Error saving project: " + error.message);
+      alert ("Error saving project: " + error);
     } else {
-      alert("Project succesfully saved");
       hideAddProject();
+      $('#nameinput').val('');
+      $('#nameinput').attr("placeholder", "Nombre del proyecto");
+      $('.project-list').append('<li data-projid="{{_id}}"> <b>Nombre:</b> ' + project.name + ' <b>' + project.info + '</b> </li>');
     }
   });
 }

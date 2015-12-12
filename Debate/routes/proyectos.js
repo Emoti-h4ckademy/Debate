@@ -40,14 +40,7 @@ router.post('/proyectos', function(req, res) {
         console.log(JSON.stringify(error));
         res.status(500).json(error);
       } else {
-        ProjectCtrl.getProjects(function (err, proyectos){
-          if(error){
-            console.log(JSON.stringify(error));
-            res.status(500).json(error);
-          } else {
-            //res.render('proyectos', proyectos);
-          }
-        });
+        res.json(project);
       }
     });
 });

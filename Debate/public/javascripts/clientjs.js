@@ -7,11 +7,11 @@ var addProject = function (projectname, callback) {
       dataType: 'json',
       success: function(data){
           console.log("Addproject response: " + data);
-          callback(undefined);
+          callback(undefined, data);
       },
       error: function(xhr, type){
           console.log('AJAX response returned and error' + xhr + ' ' + type);
-          callback(xhr);
+          callback(JSON.parse(xhr.responseText).errmsg);
       }
   })
 };
