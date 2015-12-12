@@ -1,0 +1,39 @@
+<script type="text/javascript">
+var displayAddProject = function (){
+    $( "#addproject" ).slideDown();
+};
+var hideAddProject = function () {
+  $( "#addproject" ).slideUp();
+};
+var save = function () {
+  addProject($('#nameinput').val(), function(error){
+    if(error) {
+      alert ("Error saving project: " + error.message);
+    } else {
+      alert("Project succesfully saved");
+      hideAddProject();
+    }
+  });
+}
+</script>
+
+
+<button class="btn btn-info addprj-button" type="button" onclick="displayAddProject()" >Add Project</button>
+<!-- user input dialog -->
+<div style="display: none; margin-bottom: 15px;" id="addproject">
+  <h2>Proyecto nuevo</h2>
+
+  <p>
+    Tras guardar el proyecto deberás añadir un entrenamiento nuevo o existente
+    e indicar el path donde guardas los fotogramas del vídeo que
+    quieres analizar.
+  </p>
+
+  <!-- input form. you can press enter too -->
+  <form>
+    <input id="nameinput" style="max-width: 300px; display: inline-block;" type="text" class="form-control" placeholder="Nombre del proyecto">
+    <button type="submit" class= "btn" onclick="event.preventDefault(); save()"> Guardar </button>
+    <button type="button" class="btn" onclick="hideAddProject()"> Cancelar </button>
+  </form>
+
+</div>

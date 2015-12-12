@@ -1,0 +1,38 @@
+<script>$(document).ready(function() {
+  detectEmotionBtn();
+  tweet();
+  charactersCounter();
+});
+</script>
+<div class="wrapper container">
+  <div class="row"><h4 style="margin: 18px;">Images stored in database</h4></div>
+  {{#each myimages}}
+  <div class="persona-card card{{_id}}">
+  <h5>Persona: {{persona}}</h5>
+  <div class="row">
+    <div class="col-md-4">
+      {{#if tranformedImage}}
+        <img data-imgid="{{_id}}" class="image" style="max-width: 98%; max-height: 166px;" src="data:image/jpg; base64,{{tranformedImage}}"/>
+      {{else}}
+        <img data-imgid="{{_id}}" class="image" style="max-width: 98%; max-height: 166px;" src="data:image/jpg; base64,{{image}}"/>
+      {{/if}}
+    </div>
+    <div class="col-md-8">
+      <div style="text-align: center;">
+        <div style="margin-bottom: 8px;">Emotion: <span class="emotion-title">{{mainemotion}}</span><span class="charNum" data-imgid="{{_id}}"></span></div>
+        <textarea rows="2" cols="54" data-imgid="{{_id}}" class="form-control tweet-area" id="focusedInput"
+                  type="text" maxlength="118">{{tagify persona}} {{tagify mainemotion}} {{../hashtags}}</textarea>
+        <div data-imgid="{{_id}}" class="buttons-row" style="padding-top: 10px;">
+          <button  data-imgid="{{_id}}" class="btn btn-success emotion-retriever"
+          type="button">Detect Emotion</button>
+          <button data-imgid="{{_id}}" class="btn btn-info tweet-button" type="button">Tweet</button>
+          <div data-imgid="{{_id}}" class="tweet-status">
+          </div>
+        </div>
+      </div>
+      <div class="ajax-response-container{{_id}} pull-left"></div>
+    </div>
+  </div>
+</div>
+  {{/each}}
+</div>
