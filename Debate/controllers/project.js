@@ -21,7 +21,8 @@ Project.prototype.create = function (name, callback) {
 
     var project = new self.projectDB({
         name:   name,
-        trainedStatus: "no"
+        trainedStatus: "no",
+        creationDate: Date.now()
     });
 
     project.save(function (error, data) {
