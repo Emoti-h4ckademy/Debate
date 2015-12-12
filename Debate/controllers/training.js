@@ -21,7 +21,8 @@ Training.prototype.create = function (name, callback) {
 
     var training = new self.trainingDB({
         name:   name,
-        trainedStatus: "no"
+        trainedStatus: "no",
+        date = new Date()
     });
 
     training.save(function (error, data) {
