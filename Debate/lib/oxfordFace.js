@@ -1,5 +1,7 @@
 var config = require('config'),
     request = require('request');
+    fs = require('fs');
+    path = require('path');
 
 /**
  * OxfordFace constructor.
@@ -67,6 +69,37 @@ OxfordFace.prototype._getFaces = function (binaryImage, callback) {
         });
 };
 
+OxfordFace.prototype._getFacesIds = function (directoryPath, callback) {
+  var self = this;
+      var files = fs.readdirSync(directoryPath);
+      var faceIds = [];
+      var faceImg;
+      var error = [];
+
+      var numberOfFiles = callsReamining = files.length;
+
+      for (var i = 0; i < numberOfFiles; i++) {
+        var filename = files[i];
+        var fullPath = directoryPath + path.sep + filename;
+        faceImg = fs.readFileSync(fullPath);
+        self.detectFaces(faceImg, function(err, faces){
+          --callsReamining;
+          if(err) {
+            error.push(err);
+            console.log("_getFacesIds Error detecting face of " + fullPath + ", error: " + JSON.stringify(err));
+          } else {
+            var result = JSON.parse(faces)[0];
+            faceIds.push({faceId : result.faceId, path : fullPath, date : new Date()});
+            console.log("Face Id detected: " + result.faceId);
+          }
+
+          if (callsReamining <= 0) {
+            callback(error, faceIds);
+          }
+        });
+      }
+};
+
 /**
  * Analyzes an image (binary) calling oxford API
  * @param {type} binaryImage
@@ -91,11 +124,11 @@ OxfordFace.prototype.createPerson = function (/*parameteres*/callback) {
 
 OxfordFace.prototype._getPersonGroup = function (personGroupID, callback) {
     var self = this;
-    
+
     if (!personGroupID) {
         return callback ("Empty personGroupID");
     }
-    
+
     var urlPlusOptions = self.personBaseUrl + "/" + personGroupID; //No extra options
 
     return request({
@@ -121,11 +154,11 @@ OxfordFace.prototype._getPersonGroup = function (personGroupID, callback) {
 
 OxfordFace.prototype.createPersonGroup = function (personGroupID, callback) {
     var self = this;
-    
+
     if (!personGroupID) {
         return callback ("Empty personGroupID");
     }
-    
+
     self._getPersonGroup(personGroupID, callback);
 };
 
