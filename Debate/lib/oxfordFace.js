@@ -130,13 +130,16 @@ OxfordFace.prototype.createPerson = function (directoryPath, name, userData, gro
       faceIds.push(result[elem].oxfordFaceID);
     }
     // Step 2: create a person in Oxford with the given faces ids
-    self._oxfordCallCreatePerson(faceIds, name, userData, groupId, function(error, oxfordPersonID){
-      if(error) console.log("OxfordFace.createPerson - self._oxfordCallCreatePerson ERROR: " + error);
-      // Step 3: save person in database
-      PersonCtrl.createPerson(name, faceIds, oxfordPersonID, function(error, person){
-        if(error) console.log("OxfordFace.createPerson PersonCtrl._createPerson ERROR: " + error);
-        callback(error, person);
-      });
+    self._oxfordCallCreatePerson(faceIds, name, userData, groupId, function(error, response){
+      if(error) {
+        console.log("OxfordFace.createPerson - self._oxfordCallCreatePerson ERROR: " + error);
+      } else {
+        // Step 3: save person in database
+        PersonCtrl.createPerson(name, faceIds, response.personId, function(error, person){
+          if(error) console.log("OxfordFace.createPerson PersonCtrl._createPerson ERROR: " + error);
+          callback(error, person);
+        });
+      }
     });
   });
 };
@@ -163,7 +166,6 @@ OxfordFace.prototype._oxfordCallCreatePerson = function (faceIds, name, userData
     if (error) {
       console.log("OxfordFace._oxfordCallCreatePerson ERROR: " + JSON.stringify(error));
     }
-    console.log("Oxford Person response: " + JSON.stringify(body));
     callback(error, body);
   });
 };
@@ -189,7 +191,6 @@ OxfordFace.prototype._oxfordCallCreatePersonGroup = function (groupId, name, use
     if (error) {
       console.log("OxfordFace._oxfordCallCreatePersonGroup ERROR: " + JSON.stringify(error));
     }
-    console.log("Oxford PersonGroup response: " + JSON.stringify(body));
     callback(error, body);
   });
 };
