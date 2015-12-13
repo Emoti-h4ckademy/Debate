@@ -4,8 +4,8 @@
 ## INSTALL
 
 - install external dependencies
-  ffmpeg: http://www.ffmpeg.org/download.html or ```brew install ffmpeg```
-  graphicsmagick: http://www.graphicsmagick.org/
+ffmpeg: http://www.ffmpeg.org/download.html or ```brew install ffmpeg```
+graphicsmagick: http://www.graphicsmagick.org/
 
 
 ### GNU/Linux Generic install
@@ -41,4 +41,10 @@ $ DEBUG=Debate:* npm start
 - run the image capturer:
 ```
 $ npm run capture
+```
+
+## TESTING
+
+```
+NODE_ENV=development jasmine 
 ```
