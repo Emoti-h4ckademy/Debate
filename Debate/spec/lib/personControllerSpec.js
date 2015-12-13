@@ -1,22 +1,39 @@
 var fs = require ('fs');
 var PersonCtrl = require('../../controllers/person');
-var directoryPath = 'spec/lib/faces/';
+var PersonImage = require('../../models/person').personImage;
+var directoryPath = 'spec/lib/faces';
+var express = require('express');
+var dbHandler  = require('../../lib/dbHandler');
+var app = express();
 
-describe("OxfordFace - recognize face:", function() {
+//Initialize database
+dbHandler.initializeDatabase(app, function (error) {
+   if (error) {
+       console.log ("Could not initialize database. Check if MongoDB service is up");
+       process.exit(1);
+   }
+});
+//jasmine.DEFAULT_TIMEOUT_INTERVAL = 15000;
 
-  it("More than one image must exist in faces folder", function() {
-    var files = fs.readdirSync(directoryPath);
-    expect(files.length).toBeGreaterThan(1);
-  });
+describe("Person image methods", function () {
+    it("Person must be saved in database", function(done){
+      var faces = [new PersonImage ({
+        fullPath:            "mock_path",
+        oxfordFaceID:        "mock_id",
+        oxfordDetectionDate: new Date()
+      })];
+      PersonCtrl.createPerson("mock_name" , faces, "mock_personId", function(error, person){
+        expect(person).toEqual(jasmine.any(Object));
+        done();
+      })
+    });
 
-  it("_getFacesIds must return an array of ids", function(done) {
-    var fileName = fs.readdirSync(directoryPath)[1];
-    var file = fs.readFileSync(directoryPath + fileName);
-    var result;
-      PersonCtrl._getFacesIds(directoryPath, function (error, faces) {
-          console.log("Faces: " + faces);
-          expect(faces.length).toBeGreaterThan(1);
-          done();
-      });
+    it("Person Image must be saved in database", function(done){
+      PersonCtrl.createPersonImage("mock_path", "mock_id", new Date(), function(error, personImage){
+        expect(personImage).toEqual(jasmine.any(Object));
+        done();
+      })
+    });
+
   });
 });

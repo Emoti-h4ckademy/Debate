@@ -17,6 +17,6 @@ var personSchema = new Schema({
 });
 
 module.exports = {
-    Person: mongoose.model('Person', personSchema),
-    PersonImage : mongoose.model('PersonImage', personImageSchema)
+    person: mongoose.model('Person', personSchema),
+    personImage : mongoose.model('PersonImage', personImageSchema)
 };
