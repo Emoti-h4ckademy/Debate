@@ -13,20 +13,20 @@ describe("Image model testing:", function() {
     });
 
     dbHandler.initializeDatabase(app, function (error) {
-       if (error) {
-           console.log ("Could not initialize database. Check if MongoDB service is up");
-           process.exit(1);
-       }
+        if (error) {
+            console.log ("Could not initialize database", error);
+            process.exit(1);
+        }
     });
 
     afterAll(function() {
-      dbHandler.closeConnection();
+        dbHandler.closeConnection();
     });
 
     xit("It saves correctly a document in database", function(done) {
         imObject.save(function (error) {
-          expect(error).toBeFalsy();
-          done();
-      });
+            expect(error).toBeFalsy();
+            done();
+        });
     });
 });
