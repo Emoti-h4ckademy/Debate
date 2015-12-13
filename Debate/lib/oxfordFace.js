@@ -2,6 +2,7 @@ var config = require('config'),
     request = require('request');
     fs = require('fs');
     path = require('path');
+    hash = require('hash-string');
 
 /**
  * OxfordFace constructor.
@@ -77,27 +78,27 @@ OxfordFace.prototype._getFacesIds = function (directoryPath, callback) {
       var error = [];
 
       var numberOfFiles = callsReamining = files.length;
-
       for (var i = 0; i < numberOfFiles; i++) {
         var filename = files[i];
-        var fullPath = directoryPath + path.sep + filename;
-        faceImg = fs.readFileSync(fullPath);
-        self.detectFaces(faceImg, function(err, faces){
-          --callsReamining;
-          if(err) {
-            error.push(err);
-            console.log("_getFacesIds Error detecting face of " + fullPath + ", error: " + JSON.stringify(err));
-          } else {
-            var result = JSON.parse(faces)[0];
-            faceIds.push({faceId : result.faceId, path : fullPath, date : new Date()});
-            console.log("Face Id detected: " + result.faceId);
-          }
-
-          if (callsReamining <= 0) {
-            callback(error, faceIds);
-          }
-        });
-      }
+        setTimeout(function(f){
+          var fullPath = directoryPath + path.sep + f;
+          var faceImg = fs.readFileSync(fullPath);
+          self.detectFaces(faceImg, function(err, faces){
+            --callsReamining;
+            if(err) {
+              error.push(err);
+              console.log("_getFacesIds Error detecting face of " + fullPath + ", error: " + JSON.stringify(err));
+            } else {
+              var result = JSON.parse(faces)[0];
+              faceIds.push({faceId : result.faceId, path : fullPath, date : new Date()});
+              console.log("Face Id detected: " + result.faceId + ", path: " + fullPath + ", hash: " + hash(JSON.stringify(faceImg)));
+            }
+            if (callsReamining <= 0) {
+              callback(error, faceIds);
+            }
+          });
+        }(filename), 1);
+      };
 };
 
 /**

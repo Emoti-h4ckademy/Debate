@@ -16,6 +16,7 @@
     "express": "~4.13.1",
     "express-handlebars": "^2.0.1",
     "gm": "^1.21.1",
+    "hash-string": "^1.0.0",
     "mkdirp": "^0.5.1",
     "mongoose": "^4.2.9",
     "morgan": "~1.6.1",
