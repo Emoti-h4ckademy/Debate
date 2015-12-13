@@ -13,7 +13,6 @@ dbHandler.initializeDatabase(app, function (error) {
        process.exit(1);
    }
 });
-//jasmine.DEFAULT_TIMEOUT_INTERVAL = 15000;
 
 describe("Person image methods", function () {
     it("Person must be saved in database", function(done){
@@ -34,6 +33,5 @@ describe("Person image methods", function () {
         done();
       })
     });
-
   });
 });
