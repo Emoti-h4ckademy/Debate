@@ -119,9 +119,8 @@ OxfordFace.prototype.detectFaces = function (binaryImage, callback) {
   self._getFaces(binaryImage, callback);
 };
 
-OxfordFace.prototype.createPerson = function (directoryPath, name, userInfoString, groupId, callback) {
+OxfordFace.prototype.createPerson = function (directoryPath, name, userData, groupId, callback) {
   var self = this;
-  var urlPlusOptions = self.personBaseUrl; //No extra options
 
   // Step 1: get faces ids for files in directoryPath
   self._getFacesIds (directoryPath, function(error, result){
@@ -131,7 +130,7 @@ OxfordFace.prototype.createPerson = function (directoryPath, name, userInfoStrin
       faceIds.push(result[elem].oxfordFaceID);
     }
     // Step 2: create a person in Oxford with the given faces ids
-    self._oxfordCallCreatePerson(faceIds, name, userInfoString, function(error, oxfordPersonID){
+    self._oxfordCallCreatePerson(faceIds, name, userData, groupId, function(error, oxfordPersonID){
       if(error) console.log("OxfordFace.createPerson - self._oxfordCallCreatePerson ERROR: " + error);
       // Step 3: save person in database
       PersonCtrl.createPerson(name, faceIds, oxfordPersonID, function(error, person){

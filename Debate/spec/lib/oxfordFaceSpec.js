@@ -72,7 +72,7 @@ describe("Create a person in Oxford", function () {
     var directoryPath = 'spec/lib/person';
     var name = 'Bertín Osborne';
     var useInfoString = 'Persona ' + name + ' creado el ' + new Date();
-    var groupId = "2392905290752375";
+    
     Face.createPerson (directoryPath, name, useInfoString, groupId, function(error, personId){
       expect(personId).toEqual(jasmine.anything());
       done();
