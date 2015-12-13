@@ -6,7 +6,7 @@ var laSextaStreamURL = "http://a3live-lh.akamaihd.net/i/lasexta_1@35272/master.m
 var _8tvStreamURL = "rtmp://91.121.143.193:1935/liverepeater/8TV/8aldia-directe";
 var secondsBetweenCaptures = 3;
 var destinationFolder = "./snapshots";
-var ffmpegCommand = "ffmpeg -i "+_8tvStreamURL+" -vf fps=1/"+secondsBetweenCaptures+" "+destinationFolder+"/out%d.png";
+var ffmpegCommand = "ffmpeg -i "+_8tvStreamURL+" -vf fps=1/"+secondsBetweenCaptures+" "+destinationFolder+"/out%d.jpeg";
 
 
 mkdirp(destinationFolder, function (error) {
