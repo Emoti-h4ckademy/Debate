@@ -1,5 +1,16 @@
 var fs = require ('fs');
 var Face = require('../../lib/oxfordFace');
+var express = require('express');
+var dbHandler  = require('../../lib/dbHandler');
+var app = express();
+
+//Initialize database
+dbHandler.initializeDatabase(app, function (error) {
+  if (error) {
+    console.log ("Could not initialize database. Check if MongoDB service is up");
+    process.eit(1);
+  }
+});
 
 describe("Oxford get faces ids for multiple files in folder:", function() {
   jasmine.DEFAULT_TIMEOUT_INTERVAL = 15000;
@@ -31,4 +42,41 @@ describe("Oxford get faces ids for multiple files in folder:", function() {
           done();
       });
   });
+});
+
+describe("Create a person in Oxford", function () {
+  jasmine.DEFAULT_TIMEOUT_INTERVAL = 30000;
+  var groupId = "2392905290752375";
+
+  it("A group must be created in Oxford", function (done) {
+    var name = "Grupo de prueba";
+    var groupData = "Grupo de prueba para testing";
+    Face._oxfordCallCreatePersonGroup(groupId, name, groupData, function(error, result){
+      expect(error).not.toEqual(jasmine.anything());
+      done();
+    });
+
+  });
+
+  it("AJAX call to Oxford create person must work", function (done) {
+    var faceIds = ["f6eb7ed7-29b0-4d88-8720-b39ee9d0c488","4de03350-d087-4092-befa-772213e75251"];
+    var name = "Test person";
+    var userData = "Person used for testing";
+    Face._oxfordCallCreatePerson (faceIds, name, userData, groupId, function(error, response){
+      expect(error).not.toEqual(jasmine.anything());
+      done();
+    });
+  });
+
+  it("Must create a person with a given name and directoryPath as parameters", function (done) {
+    var directoryPath = 'spec/lib/person';
+    var name = 'Bertín Osborne';
+    var useInfoString = 'Persona ' + name + ' creado el ' + new Date();
+    var groupId = "2392905290752375";
+    Face.createPerson (directoryPath, name, useInfoString, groupId, function(error, personId){
+      expect(personId).toEqual(jasmine.anything());
+      done();
+    });
+  });
+
 });

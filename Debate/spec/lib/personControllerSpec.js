@@ -15,7 +15,7 @@ dbHandler.initializeDatabase(app, function (error) {
 });
 
 describe("Person image methods", function () {
-  it("Person must be saved in database", function(done){
+  it("Person must be saved correctly in database", function(done){
     var faces = [new PersonImage ({
       fullPath:            "mock_path",
       oxfordFaceID:        "mock_id",
@@ -27,10 +27,11 @@ describe("Person image methods", function () {
     })
   });
 
-  it("Person Image must be saved in database", function(done){
+  it("Person Image must be saved correctly in database", function(done){
     PersonCtrl.createPersonImage("mock_path", "mock_id", new Date(), function(error, personImage){
       expect(personImage).toEqual(jasmine.any(Object));
       done();
     })
   });
+  
 });
