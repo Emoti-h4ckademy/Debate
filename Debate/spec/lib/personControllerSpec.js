@@ -4,12 +4,12 @@ var directoryPath = 'spec/lib/faces/';
 
 describe("OxfordFace - recognize face:", function() {
 
-  it("More than one image must exist in faces folder", function() {
+  xit("More than one image must exist in faces folder", function() {
     var files = fs.readdirSync(directoryPath);
     expect(files.length).toBeGreaterThan(1);
   });
 
-  it("_getFacesIds must return an array of ids", function(done) {
+  xit("_getFacesIds must return an array of ids", function(done) {
     var fileName = fs.readdirSync(directoryPath)[1];
     var file = fs.readFileSync(directoryPath + fileName);
     var result;
