@@ -14,7 +14,7 @@ var dbHandler = module.exports = {
         app.set('DB_URL', dbUrl);
 
         // Connection to DB
-        dbConnection = mongoose.createConnection(dbUrl, {}, function(err, db) {
+        dbConnection = mongoose.connect(dbUrl, {}, function(err, db) {
             if(err) {
                 callback (err);
             }
