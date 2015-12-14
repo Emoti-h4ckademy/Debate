@@ -22,7 +22,7 @@ watcher
                 } else {
                     var myimage = data.toString('base64');
                     var newImage = new imageController.imageDB({
-                        persona:    "h4ckademy power",
+                        persona:    "CaraACaraL6",
                         date:        new Date(),
                         image:       myimage
                     });

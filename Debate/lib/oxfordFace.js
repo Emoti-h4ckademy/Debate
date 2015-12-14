@@ -338,6 +338,7 @@ OxfordFace.prototype.checkGroupStatus = function (personGroupID, callback) {
  */
 OxfordFace.prototype.identifyPersona = function (faceIDs, personGroupID, callback) {
     var self = this;
+    console.log("Identify faces: " + faceIDs + ". Group: " + personGroupID);
 
     if (!personGroupID || !faceIDs) {
         callback ("Invalid parameters");

@@ -39,7 +39,8 @@ function matchAllResponses (emotionResponse, faceResponse, identifyResponse) {
     }
     
     var myFacesIDs = JSON.parse(faceResponse);
-    var myIdentifications = JSON.parse(identifyResponse);
+//    var myIdentifications = JSON.parse(identifyResponse);
+    var myIdentifications = identifyResponse;
     
     for (var emotion in myEmotions) {
         for (var faceID in myFacesIDs) {
@@ -48,7 +49,11 @@ function matchAllResponses (emotionResponse, faceResponse, identifyResponse) {
                 for (var identification in myIdentifications) {
                     if (myIdentifications[identification].faceId === myFacesIDs[faceID].faceId) {
                         found = true;
-
+                        if (myIdentifications[identification].candidates.length == 0) {
+                            console.log("Image match: No candidates !!!!!");
+                            myFaces.push( { 'emotion' : myEmotions[emotion], 'name' : ""});
+                            break;
+                        }
                         var candidate = myIdentifications[identification].candidates[0];
                         console.log(candidate.personId);
                         if (candidate.personId == "7504701d-e830-4d6f-ae4e-b188e1c2ee1e") {
