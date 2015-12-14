@@ -5,13 +5,13 @@ var router = express.Router();
 var config = require('config');
 
 /* GET home page. */
-router.get('/identificacion', function(req, res) {
+router.get('/trainings', function(req, res) {
   TrainingCtrl.getTrainings(function (error, trainings){
     if(error){
       console.log(JSON.stringify(error));
       res.status(500).json(error);
     } else {
-      res.render('identificacion', trainings);
+      res.render('trainings', trainings);
     }
   });
 });
