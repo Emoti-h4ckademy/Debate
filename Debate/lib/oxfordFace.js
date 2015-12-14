@@ -41,6 +41,7 @@ OxfordFace.prototype._parseResponse = function (response, body, callback) {
  * Given a binary image, it communicates with Oxofrd to detect the faces in it
  * @param {type} binaryImage
  * @param {type} callback (error, data)
+ * API doc: https://dev.projectoxford.ai/docs/services/54d85c1d5eefd00dc474a0ef/operations/54f0375749c3f70a50e79b82
  * @returns {unresolved}
  */
 OxfordFace.prototype._getFaces = function (binaryImage, callback) {
@@ -71,6 +72,7 @@ OxfordFace.prototype._getFaces = function (binaryImage, callback) {
  * @param {type} name - Person group display name
  * @param {type} userGroupData - User-provided data attached to the person group
  * @param {type} callback (error, data)
+ * API doc: https://dev.projectoxford.ai/docs/services/54d85c1d5eefd00dc474a0ef/operations/54f0387249c3f70a50e79b84
  * @returns {unresolved}
  */
 OxfordFace.prototype._createPersonGroup = function (groupId, name, userGroupData, callback) {
@@ -100,12 +102,13 @@ OxfordFace.prototype._createPersonGroup = function (groupId, name, userGroupData
 };
 
 /**
- * 
+ * Creates a new person in a specified person group for identification. 
  * @param {type} faceIds - Array of person face Ids. The maximum face count is 32.
  * @param {type} groupId - The target person's belonging person group's ID.
  * @param {type} name - Target person's display name. 
  * @param {type} userData - Optional fields for user-provided data attached to a person. 
  * @param {type} callback (error, data)
+ * API doc: https://dev.projectoxford.ai/docs/services/54d85c1d5eefd00dc474a0ef/operations/54f153f149c3f7124859da42
  * @returns {unresolved}
  */
 OxfordFace.prototype._createPerson = function (groupId, faceIds, name, userData, callback) {
@@ -139,6 +142,7 @@ OxfordFace.prototype._createPerson = function (groupId, faceIds, name, userData,
  * Communicates with Oxford to train a personGroup
  * @param {type} groupId - Target person group to be trained.
  * @param {type} callback - (error, data)
+ * API doc: https://dev.projectoxford.ai/docs/services/54d85c1d5eefd00dc474a0ef/operations/54f55e6b49c3f712f472478d
  * @returns {unresolved}
  */
 OxfordFace.prototype._trainPersonGroup = function (groupId, callback) {
@@ -165,6 +169,7 @@ OxfordFace.prototype._trainPersonGroup = function (groupId, callback) {
  * Calls Oxford API to retrieve the training status of a person group
  * @param {type} groupId - The id of target person group.
  * @param {type} callback (error, data)
+ * API doc: https://dev.projectoxford.ai/docs/services/54d85c1d5eefd00dc474a0ef/operations/54f55e803d8a4b1048bada87 
  * @returns {unresolved}
  */
 OxfordFace.prototype._getTrainStatus = function (groupId, callback) {
@@ -187,6 +192,14 @@ OxfordFace.prototype._getTrainStatus = function (groupId, callback) {
     });
 };
 
+/**
+ * Calls Oxford API to try to match a faceID to a person in a group
+ * @param {type} faceIDs - Array to faceIds to be identified
+ * @param {type} personGroupID - The id of target person group.
+ * @param {type} callback (error, data)
+ * API doc: https://dev.projectoxford.ai/docs/services/54d85c1d5eefd00dc474a0ef/operations/54f0391149c3f70a50e79b87
+ * @returns {unresolved}
+ */
 OxfordFace.prototype._identifyFaces = function (faceIDs, personGroupID, callback) {
     var self = this;
     var urlPlusOptions = self.identificationUrl;
@@ -223,7 +236,8 @@ OxfordFace.prototype._identifyFaces = function (faceIDs, personGroupID, callback
 /**
 * Analyzes an image (binary) calling oxford API
 * @param {type} binaryImage
-* @param {type} callback (error, facesArray)
+* @param {type} callback (error, data)
+* data format: https://dev.projectoxford.ai/docs/services/54d85c1d5eefd00dc474a0ef/operations/54f0375749c3f70a50e79b82
 * @returns {undefined}
  */
 OxfordFace.prototype.detectFaces = function (binaryImage, callback) {
@@ -260,6 +274,7 @@ OxfordFace.prototype.createPersonGroup = function (personGroupID, name, callback
  * @param {type} faceIDs - Array of facesIDs to be used
  * @param {type} name - Human name for the Person in the Oxford System
  * @param {type} callback (error, data)
+ * data format: https://dev.projectoxford.ai/docs/services/54d85c1d5eefd00dc474a0ef/operations/54f153f149c3f7124859da42
  * @returns {undefined}
  */
 OxfordFace.prototype.createPerson = function (personGroupID, faceIDs, name, callback) {
@@ -283,6 +298,7 @@ OxfordFace.prototype.createPerson = function (personGroupID, faceIDs, name, call
  * Starts a person group training
  * @param {type} personGroupID - Target person group to be trained.
  * @param {type} callback (error, data)
+ * data format: https://dev.projectoxford.ai/docs/services/54d85c1d5eefd00dc474a0ef/operations/54f55e6b49c3f712f472478d
  * @returns {undefined}
  */
 OxfordFace.prototype.trainPersonGroup = function (personGroupID, callback) {
@@ -299,6 +315,7 @@ OxfordFace.prototype.trainPersonGroup = function (personGroupID, callback) {
  * Retrieves the training status of a person group. 
  * @param {type} personGroupID - The id of target person group.
  * @param {type} callback (error, data)
+ * data format: https://dev.projectoxford.ai/docs/services/54d85c1d5eefd00dc474a0ef/operations/54f55e803d8a4b1048bada87
  * @returns {undefined} 
  */
 OxfordFace.prototype.checkGroupStatus = function (personGroupID, callback) {
@@ -316,6 +333,7 @@ OxfordFace.prototype.checkGroupStatus = function (personGroupID, callback) {
  * @param {type} faceIDs - Array of the faces to be identified
  * @param {type} personGroupID - Target person group's ID 
  * @param {type} callback (error, data)
+ * data format: https://dev.projectoxford.ai/docs/services/54d85c1d5eefd00dc474a0ef/operations/54f0391149c3f70a50e79b87
  * @returns {undefined}
  */
 OxfordFace.prototype.identifyPersona = function (faceIDs, personGroupID, callback) {
