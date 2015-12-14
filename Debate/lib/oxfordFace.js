@@ -124,7 +124,11 @@ OxfordFace.prototype.createPerson = function (directoryPath, name, userData, gro
 
   // Step 1: get faces ids for files in directoryPath
   self._getFacesIds (directoryPath, function(error, result){
-    if(error) console.log("OxfordFace.createPerson - self._getFacesIds ERROR: " + error);
+    if(error){
+      console.log("OxfordFace.createPerson - self._getFacesIds ERROR: " + error);
+      callback(error);
+      return;
+    }
     var faceIds = [];
     for(var elem in result){
       faceIds.push(result[elem].oxfordFaceID);
@@ -201,39 +205,13 @@ OxfordFace.prototype._oxfordCallCreatePersonGroup = function (groupId, name, use
 };
 
 
-OxfordFace.prototype._getPersonGroup = function (personGroupID, callback) {
-  var self = this;
-
-  var urlPlusOptions = self.personBaseUrl + "/" + personGroupID + "?personGroupId="+personGroupID; //No extra options
-  console.log("urlPlusOptions", urlPlusOptions);
-  return request({
-    url: urlPlusOptions,
-    method: "PUT",
-    json: {
-      "name":       personGroupID,
-      "userData":   personGroupID
-    },
-    headers: {
-      "Ocp-Apim-Subscription-Key" : self.apiKey
-    }
-  }, function (error, response, body) {
-    if (error) {
-      callback ("Couldn't reach Oxford Service server");
-    }
-    else {
-      self._parseResponse(response, callback, body);
-    }
-  });
-};
-
-
-OxfordFace.prototype.getPersonGroup = function (personGroupID, callback) {
+OxfordFace.prototype.createPersonGroup = function (personGroupID, name, callback) {
   var self = this;
 
   if (!personGroupID) {
     callback ("Empty personGroupID");
   }else{
-    self._getPersonGroup(personGroupID, callback);
+    self._oxfordCallCreatePersonGroup(personGroupID, name, name, callback);
   }
 };
 
