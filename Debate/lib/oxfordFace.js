@@ -29,8 +29,8 @@ function OxfordFace() {
 ]
 */
 
-OxfordFace.prototype._parseGetFaceResponse = function (response, callback) {
-  var faces;
+OxfordFace.prototype._parseResponse = function (response, callback, body) {
+  var data;
   var error;
 
   if (!response) {
@@ -39,13 +39,13 @@ OxfordFace.prototype._parseGetFaceResponse = function (response, callback) {
   }
 
   if (response.statusCode !== 200) {
-    error = "(" + response.statusCode + ") " + response.statusMessage;
+    error = "(" + response.statusCode + ") " + response.statusMessage + ": " + body.code + "->" + body.message;
   } else {
     error = false;
-    faces = response.body;
+    data = response.body;
   }
 
-  callback (error, faces);
+  callback (error, data);
 };
 
 OxfordFace.prototype._getFaces = function (binaryImage, callback) {
@@ -66,7 +66,7 @@ OxfordFace.prototype._getFaces = function (binaryImage, callback) {
       callback (error);
     }
     else {
-      self._parseGetFaceResponse(response, callback);
+      self._parseResponse(response, callback, body);
     }
   });
 };
@@ -91,8 +91,8 @@ OxfordFace.prototype._getFacesIds = function (directoryPath, callback) {
           console.log("OxfordFace._getFacesIds: ERROR detecting face of " + fullPath + ", error: " + JSON.stringify(err));
         } else {
           var result = JSON.parse(faces)[0];
-          faceIds.push({oxfordFaceID : result.faceId, path : fullPath, date : new Date()});
-          console.log("Face Id detected: " + result.faceId + ", path: " + fullPath + ", hash: " + hash(JSON.stringify(faceImg)));
+          faceIds.push({oxfordFaceID : result.faceId, fullPath : fullPath, date : new Date()});
+          console.log("Face Id detected: " + result.faceId + ", fullPath: " + fullPath + ", hash: " + hash(JSON.stringify(faceImg)));
         }
         if (callsReamining <= 0) {
           callback(error, faceIds);
@@ -129,13 +129,16 @@ OxfordFace.prototype.createPerson = function (directoryPath, name, userData, gro
     for(var elem in result){
       faceIds.push(result[elem].oxfordFaceID);
     }
+    console.log("faceIds:", faceIds);
     // Step 2: create a person in Oxford with the given faces ids
     self._oxfordCallCreatePerson(faceIds, name, userData, groupId, function(error, response){
       if(error) {
         console.log("OxfordFace.createPerson - self._oxfordCallCreatePerson ERROR: " + error);
+        callback(error);
       } else {
+        console.log("response:", response);
         // Step 3: save person in database
-        PersonCtrl.createPerson(name, faceIds, response.personId, function(error, person){
+        PersonCtrl.createPerson(name, result, response.personId, function(error, person){
           if(error) console.log("OxfordFace.createPerson PersonCtrl._createPerson ERROR: " + error);
           callback(error, person);
         });
@@ -146,7 +149,7 @@ OxfordFace.prototype.createPerson = function (directoryPath, name, userData, gro
 
 OxfordFace.prototype._oxfordCallCreatePerson = function (faceIds, name, userData, groupId, callback) {
   var self = this;
-  var urlPlusOptions = self.personBaseUrl + '/' + groupId + 'persons'; //No extra options
+  var urlPlusOptions = self.personBaseUrl + '/' + groupId + '/persons'; //No extra options
 
   return request({
     url: urlPlusOptions,
@@ -166,7 +169,9 @@ OxfordFace.prototype._oxfordCallCreatePerson = function (faceIds, name, userData
     if (error) {
       console.log("OxfordFace._oxfordCallCreatePerson ERROR: " + JSON.stringify(error));
     }
-    callback(error, body);
+    //console.log("Response from Oxford with request to "+urlPlusOptions, response);
+    self._parseResponse(response, callback, body);
+    //callback(error, body);
   });
 };
 
@@ -176,7 +181,7 @@ OxfordFace.prototype._oxfordCallCreatePersonGroup = function (groupId, name, use
 
   return request({
     url: urlPlusOptions,
-    method: "POST",
+    method: "PUT",
     json: true,
     body:
     {
@@ -189,9 +194,9 @@ OxfordFace.prototype._oxfordCallCreatePersonGroup = function (groupId, name, use
     }
   }, function (error, response, body) {
     if (error) {
-      console.log("OxfordFace._oxfordCallCreatePersonGroup ERROR: " + JSON.stringify(error));
+      callback("OxfordFace._oxfordCallCreatePersonGroup ERROR: " + JSON.stringify(error));
     }
-    callback(error, body);
+    self._parseResponse(response, callback, body);
   });
 };
 
@@ -199,12 +204,8 @@ OxfordFace.prototype._oxfordCallCreatePersonGroup = function (groupId, name, use
 OxfordFace.prototype._getPersonGroup = function (personGroupID, callback) {
   var self = this;
 
-  if (!personGroupID) {
-    return callback ("Empty personGroupID");
-  }
-
-  var urlPlusOptions = self.personBaseUrl + "/" + personGroupID; //No extra options
-
+  var urlPlusOptions = self.personBaseUrl + "/" + personGroupID + "?personGroupId="+personGroupID; //No extra options
+  console.log("urlPlusOptions", urlPlusOptions);
   return request({
     url: urlPlusOptions,
     method: "PUT",
@@ -220,20 +221,20 @@ OxfordFace.prototype._getPersonGroup = function (personGroupID, callback) {
       callback ("Couldn't reach Oxford Service server");
     }
     else {
-      self._parseGetFaceResponse(response, callback);
+      self._parseResponse(response, callback, body);
     }
   });
 };
 
 
-OxfordFace.prototype.createPersonGroup = function (personGroupID, callback) {
+OxfordFace.prototype.getPersonGroup = function (personGroupID, callback) {
   var self = this;
 
   if (!personGroupID) {
-    return callback ("Empty personGroupID");
+    callback ("Empty personGroupID");
+  }else{
+    self._getPersonGroup(personGroupID, callback);
   }
-
-  self._getPersonGroup(personGroupID, callback);
 };
 
 OxfordFace.prototype.trainProject = function (/*parameteres*/callback) {
