@@ -51,7 +51,7 @@ function matchAllResponses (emotionResponse, faceResponse, identifyResponse) {
                         found = true;
                         if (myIdentifications[identification].candidates.length == 0) {
                             console.log("Image match: No candidates !!!!!");
-                            myFaces.push( { 'emotion' : myEmotions[emotion], 'name' : ""});
+//                            myFaces.push( { 'emotion' : myEmotions[emotion], 'name' : ""});
                             break;
                         }
                         var candidate = myIdentifications[identification].candidates[0];
@@ -66,7 +66,7 @@ function matchAllResponses (emotionResponse, faceResponse, identifyResponse) {
                             break;
                         } else {
                             console.log("Image match: Other !!!!!");
-                            myFaces.push( { 'emotion' : myEmotions[emotion], 'name' : ""});
+//                            myFaces.push( { 'emotion' : myEmotions[emotion], 'name' : ""});
                             break;
                         }
                     }
@@ -78,19 +78,20 @@ function matchAllResponses (emotionResponse, faceResponse, identifyResponse) {
         }
     }
     
-    for (var emotion in myEmotions) {
-        var found = false;
-        for (var face in myFaces) {
-            if (myFaces[face].emotion === myEmotions[emotion]) {
-                found = true;
-                break;
-            }
-        }
-        if (!found) {
-            console.log("Image match: Face not matched");
-            myFaces.push( { 'emotion' : myEmotions[emotion], 'name' : ""});
-        }
-    }
+    //This adds not recognized people
+//    for (var emotion in myEmotions) {
+//        var found = false;
+//        for (var face in myFaces) {
+//            if (myFaces[face].emotion === myEmotions[emotion]) {
+//                found = true;
+//                break;
+//            }
+//        }
+//        if (!found) {
+//            console.log("Image match: Face not matched");
+//            myFaces.push( { 'emotion' : myEmotions[emotion], 'name' : ""});
+//        }
+//    }
     
     return myFaces;
 }
@@ -175,12 +176,12 @@ ImageTransformation.prototype._drawFace = function (image, completeFace, callbac
         surprise :  "Sorpresa: "    + ((parseFloat(scores["surprise"])*100).toFixed(2))+"%"
     };
     
-    var emotionString = (name ? name + "\n" : "");;
+    var emotionString = (name ? name + "\n\n" : " \n\n");;
     for (var key in emotions) emotionString += emotions[key]+"\n";
     
     var rectangle = {
         sizeX :     self.fontSize * 9,
-        sizeY :     self.fontSize * 12.5,
+        sizeY :     self.fontSize * 14,
         sepX :      0,
         sepY :      5,
         cornerw :   4,
