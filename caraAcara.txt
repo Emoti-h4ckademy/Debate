@@ -28,5 +28,12 @@ Rajoy
         "6f7fbfc4-264d-41d1-a3dc-a4e5eb473a25"
         
 
-Grupo: caraacarah4
+Grupo: "caraacarah4"
     Response: "{"status":"succeeded","startTime":"12/14/2015 3:02:39 PM","endTime":"12/14/2015 3:02:39 PM"}"
+    
+    
+Test:
+    8fee428a-1b87-40ce-a3c5-3c7184de1954
+    9117f85d-292e-4afc-a3ce-07895af07357
+    
+Response: [{"faceId":"8fee428a-1b87-40ce-a3c5-3c7184de1954","candidates":[{"personId":"7504701d-e830-4d6f-ae4e-b188e1c2ee1e","confidence":0.61106}]},{"faceId":"9117f85d-292e-4afc-a3ce-07895af07357","candidates":[{"personId":"6f7fbfc4-264d-41d1-a3dc-a4e5eb473a25","confidence":0.75943}]}]
