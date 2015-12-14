@@ -1,6 +1,5 @@
 var gm = require('gm');
 var oxfordEmotion   = require('../lib/oxfordEmotions');
-var oxfordFace      = require('../lib/oxfordFace');
 var mkdirp = require('mkdirp');
 
 /**
@@ -21,6 +20,76 @@ function ImageTransformation () {
     this.personID_rajoy = "6f7fbfc4-264d-41d1-a3dc-a4e5eb473a25";
 }
 
+function similar (faceRectangleA, faceRectangleB) {
+    if ((faceRectangleA.height > faceRectangleB.height + 5) || (faceRectangleA.height < faceRectangleB.height - 5)) return false;
+    if ((faceRectangleA.top > faceRectangleB.top + 5) || (faceRectangleA.top < faceRectangleB.top - 5)) return false;
+    if ((faceRectangleA.left > faceRectangleB.left + 5) || (faceRectangleA.left < faceRectangleB.left - 5)) return false;
+    if ((faceRectangleA.width > faceRectangleB.width + 5) || (faceRectangleA.width < faceRectangleB.width - 5)) return false;
+    return true;
+}
+
+function matchAllResponses (emotionResponse, faceResponse, identifyResponse) {
+    var myEmotions = JSON.parse(emotionResponse);
+    var myFaces = [];
+    if (!faceResponse || !identifyResponse) {
+        for (var emotion in myEmotions) {
+            myFaces.push( { 'emotion' : myEmotions[emotion], 'name' : ""});
+        }
+        return myFaces;
+    }
+    
+    var myFacesIDs = JSON.parse(faceResponse);
+    var myIdentifications = JSON.parse(identifyResponse);
+    
+    for (var emotion in myEmotions) {
+        for (var faceID in myFacesIDs) {
+            if (similar (myEmotions[emotion].faceRectangle, myFacesIDs[faceID].faceRectangle)) { /// IMPROVE THIS
+                var found = false;
+                for (var identification in myIdentifications) {
+                    if (myIdentifications[identification].faceId === myFacesIDs[faceID].faceId) {
+                        found = true;
+
+                        var candidate = myIdentifications[identification].candidates[0];
+                        console.log(candidate.personId);
+                        if (candidate.personId == "7504701d-e830-4d6f-ae4e-b188e1c2ee1e") {
+                            console.log("Image match: Pedro!!!!!");
+                            myFaces.push ({'emotion' : myEmotions[emotion], 'name' : "Pedro Sánchez"});
+                            break;
+                        } else if (candidate.personId == "6f7fbfc4-264d-41d1-a3dc-a4e5eb473a25") {
+                            console.log("Image match: Mariano!!!!!");
+                            myFaces.push ({'emotion' : myEmotions[emotion], 'name' : "Mariano Rajoy"});
+                            break;
+                        } else {
+                            console.log("Image match: Other !!!!!");
+                            myFaces.push( { 'emotion' : myEmotions[emotion], 'name' : ""});
+                            break;
+                        }
+                    }
+                }
+                if (!found) {
+                    myFaces.push( { 'emotion' : emotion, 'name' : ""});
+                }
+            } 
+        }
+    }
+    
+    for (var emotion in myEmotions) {
+        var found = false;
+        for (var face in myFaces) {
+            if (myFaces[face].emotion === myEmotions[emotion]) {
+                found = true;
+                break;
+            }
+        }
+        if (!found) {
+            console.log("Image match: Face not matched");
+            myFaces.push( { 'emotion' : myEmotions[emotion], 'name' : ""});
+        }
+    }
+    
+    return myFaces;
+}
+
 /**
  * Given an image draws the emotion information over it
  * @param {type} image - Buffer with the image to be analyzed
@@ -34,15 +103,15 @@ ImageTransformation.prototype.drawEmotions = function (image, emotionResponse, f
     var self = this;
     if (    !image || 
             !emotionResponse || 
-            !facesResponse || 
-            !identifyResponse || 
             emotionResponse === oxfordEmotion.emptyResponse) {
         callback ("Invalid parameters");
         return;
     }
     
-    var faces = JSON.parse(emotionResponse);
+    var faces = matchAllResponses (emotionResponse, facesResponse, identifyResponse);
+    
     var myIterator = faces.length;
+    console.log("Faces found: " + myIterator);
     var myForFunction = function (error, newBuffer) {
         myIterator--;
         if (error) {
@@ -57,7 +126,7 @@ ImageTransformation.prototype.drawEmotions = function (image, emotionResponse, f
             return;
         }
 
-        self._drawFace(newBuffer, faces[myIterator], "", myForFunction);
+        self._drawFace(newBuffer, faces[myIterator], myForFunction);
     };
 
     myForFunction(false, image);
@@ -66,12 +135,15 @@ ImageTransformation.prototype.drawEmotions = function (image, emotionResponse, f
 /**
  * Given an image and an object with the emotion data of a face, draws the data 
  * @param {type} image - Base image to draw into (Not modified)
- * @param {type} face - Data of the face
+ * @param {type} completeFace - Data of the face
  * @param {type} callback (error, newImage)
  * @returns {undefined}
  */
-ImageTransformation.prototype._drawFace = function (image, face, name, callback) {
+ImageTransformation.prototype._drawFace = function (image, completeFace, callback) {
     var self = this;
+    var face = completeFace.emotion;
+    var name = completeFace.name;
+    
     if (!image || !face["faceRectangle"] || !face["scores"]) {
         callback("DrawBox: Invalid parameters");
         return;
@@ -98,12 +170,12 @@ ImageTransformation.prototype._drawFace = function (image, face, name, callback)
         surprise :  "Sorpresa: "    + ((parseFloat(scores["surprise"])*100).toFixed(2))+"%"
     };
     
-    var emotionString = "";
+    var emotionString = (name ? name + "\n" : "");;
     for (var key in emotions) emotionString += emotions[key]+"\n";
     
     var rectangle = {
         sizeX :     self.fontSize * 9,
-        sizeY :     self.fontSize * 12,
+        sizeY :     self.fontSize * 12.5,
         sepX :      0,
         sepY :      5,
         cornerw :   4,
