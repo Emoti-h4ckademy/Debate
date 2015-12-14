@@ -5,9 +5,10 @@ request = require('request');
 * OxfordFace constructor.
 */
 function OxfordFace() {
-  this.apiKey         = config.get('OXFORD_FACE_API_KEY');
-  this.faceBaseUrl    = config.get('OXFORD_FACE_DETECTION_URL');
-  this.personBaseUrl  = config.get('OXFORD_PERSON_URL');
+  this.apiKey               = config.get('OXFORD_FACE_API_KEY');
+  this.faceBaseUrl          = config.get('OXFORD_FACE_DETECTION_URL');
+  this.personBaseUrl        = config.get('OXFORD_PERSON_URL');
+  this.identificationUrl    = config.get('OXFORD_IDENTIFICATIONS_URL'); 
 }
 
 /**
@@ -160,6 +161,58 @@ OxfordFace.prototype._trainPersonGroup = function (groupId, callback) {
     });
 };
 
+/**
+ * Calls Oxford API to retrieve the training status of a person group
+ * @param {type} groupId - The id of target person group.
+ * @param {type} callback (error, data)
+ * @returns {unresolved}
+ */
+OxfordFace.prototype._getTrainStatus = function (groupId, callback) {
+    var self = this;
+    var urlPlusOptions = self.personBaseUrl + '/' + groupId + '/training';
+
+    return request({
+        url:    urlPlusOptions,
+        method: "GET",
+        json:   false,
+        headers: {
+            "Ocp-Apim-Subscription-Key" : self.apiKey
+        }
+    }, function (error, response, body) {
+        if (error) {
+            callback("Could not connect with Oxford");
+        } else {
+            self._parseResponse(response, body, callback);
+        }
+    });
+};
+
+OxfordFace.prototype._identifyFaces = function (faceIDs, personGroupID, callback) {
+    var self = this;
+    var urlPlusOptions = self.identificationUrl;
+    
+    return request({
+        url:    urlPlusOptions,
+        method: "POST",
+        json:   true,
+        body:
+        {
+            faceIds         :   faceIDs,
+            personGroupId   :   personGroupID
+        },
+        headers: {
+            "content-type" :              "application/json",
+            "Ocp-Apim-Subscription-Key" : self.apiKey
+        }
+    }, function (error, response, body) {
+        if (error) {
+            callback("Could not connect with Oxford");
+        } else {
+            self._parseResponse(response, body, callback);
+        }
+    });
+};
+
 /**************************** PUBLIC **********************************
 ***************************** PUBLIC **********************************
 ***************************** PUBLIC **********************************
@@ -226,7 +279,7 @@ OxfordFace.prototype.createPerson = function (personGroupID, faceIDs, name, call
 };
 
 /**
- * Ask nicely to Oxford to train certain group
+ * Starts a person group training
  * @param {type} personGroupID - Target person group to be trained.
  * @param {type} callback (error, data)
  * @returns {undefined}
@@ -237,21 +290,49 @@ OxfordFace.prototype.trainPersonGroup = function (personGroupID, callback) {
     if (!personGroupID) {
         callback ("Invalid group id");
     } else {
+        self._getTrainStatus(personGroupID, callback);
+    }
+};
+
+/**
+ * Retrieves the training status of a person group. 
+ * @param {type} personGroupID - The id of target person group.
+ * @param {type} callback (error, data)
+ * @returns {undefined} 
+ */
+OxfordFace.prototype.checkProjectStatus = function (personGroupID, callback) {
+    var self = this;
+        
+    if (!personGroupID) {
+        callback ("Invalid group id");
+    } else {
         self._trainPersonGroup(personGroupID, callback);
     }
 };
 
 
-OxfordFace.prototype.checkProjectStatus = function (/*parameteres*/callback) {
+/**
+ * Identifies persons from a person group by one or more input faces. 
+ * @param {type} faceIDs - Array of the faces to be identified
+ * @param {type} personGroupID - Target person group's ID 
+ * @param {type} callback (error, data)
+ * @returns {undefined}
+ */
+OxfordFace.prototype.identifyPersona = function (faceIDs, personGroupID, callback) {
+    var self = this;
 
-  callback (/*error, status*/true);
+    if (!personGroupID || !faceIDs) {
+        callback ("Invalid parameters");
+        return;
+    }
+    
+    if(!Array.isArray(faceIDs))
+    {
+        callback ("faceIDs must be an array");
+        return;
+    }
+    
+    self._identifyFaces(faceIDs, personGroupID, callback);
 };
-
-OxfordFace.prototype.identifyPersona = function (/*parameteres*/callback) {
-
-  callback (/*error, persona*/true);
-};
-
-
 
 module.exports = new OxfordFace();
