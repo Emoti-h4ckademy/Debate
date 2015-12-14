@@ -13,7 +13,8 @@ var save = function () {
       hideAddTraining();
       $('#trainingname').val('');
       $('#trainingname').attr("placeholder", "Nombre del training");
-      $('.training-list').append('<li data-projid="{{_id}}"> <b>Nombre:</b> ' + training.name + ' <b>' + training.info + '</b> </li>');
+      location.reload();
+      //$('.training-list').append('<li data-projid="{{_id}}"> <b>Nombre:</b> ' + training.name + ' <b>' + training.info + '</b> </li>');
     }
   });
 }
