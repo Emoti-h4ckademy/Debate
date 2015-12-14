@@ -77,7 +77,7 @@ router.post('/emotiondetect', function(req, res) {
             image.emotions = emotions;
             image.mainemotion = mainEmotion;
 
-            ImageTransformation.drawEmotions(new Buffer(image.image, 'base64'), emotions, function(error, tranformedImage){
+            ImageTransformation.drawEmotions(new Buffer(image.image, 'base64'), emotions, "facesResponse", "identificationResponse",  function(error, tranformedImage){
               if (error){
                     console.log("ImageTransformation: "+ error);
                     res.status(500).json(error);

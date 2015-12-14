@@ -1,5 +1,6 @@
 var gm = require('gm');
-var oxford = require('../lib/oxfordEmotions');
+var oxfordEmotion   = require('../lib/oxfordEmotions');
+var oxfordFace      = require('../lib/oxfordFace');
 var mkdirp = require('mkdirp');
 
 /**
@@ -15,18 +16,27 @@ function ImageTransformation () {
      * Temporal directory used during the composition of the final image
      */
     this.auxDir = "./tmp/";
+    
+    this.personID_pedro = "7504701d-e830-4d6f-ae4e-b188e1c2ee1e";
+    this.personID_rajoy = "6f7fbfc4-264d-41d1-a3dc-a4e5eb473a25";
 }
 
 /**
  * Given an image draws the emotion information over it
  * @param {type} image - Buffer with the image to be analyzed
  * @param {type} emotionResponse - Emotion Response from Oxford
+ * @param {type} facesResponse - Faces response from Oxford
+ * @param {type} identifyResponse - Identify response from Oxford
  * @param {type} callback (error, newImageBuffer)
  * @returns {undefined}
  */
-ImageTransformation.prototype.drawEmotions = function (image, emotionResponse, callback) {
+ImageTransformation.prototype.drawEmotions = function (image, emotionResponse, facesResponse, identifyResponse, callback) {
     var self = this;
-    if (!image || !emotionResponse || !callback || emotionResponse === oxford.emptyResponse) {
+    if (    !image || 
+            !emotionResponse || 
+            !facesResponse || 
+            !identifyResponse || 
+            emotionResponse === oxfordEmotion.emptyResponse) {
         callback ("Invalid parameters");
         return;
     }
@@ -37,6 +47,7 @@ ImageTransformation.prototype.drawEmotions = function (image, emotionResponse, c
         myIterator--;
         if (error) {
             callback (error);
+            return;
         }
 
         if (myIterator === -1) {
@@ -46,7 +57,7 @@ ImageTransformation.prototype.drawEmotions = function (image, emotionResponse, c
             return;
         }
 
-        self._drawFace(newBuffer, faces[myIterator], myForFunction);
+        self._drawFace(newBuffer, faces[myIterator], "", myForFunction);
     };
 
     myForFunction(false, image);
@@ -59,7 +70,7 @@ ImageTransformation.prototype.drawEmotions = function (image, emotionResponse, c
  * @param {type} callback (error, newImage)
  * @returns {undefined}
  */
-ImageTransformation.prototype._drawFace = function (image, face, callback) {
+ImageTransformation.prototype._drawFace = function (image, face, name, callback) {
     var self = this;
     if (!image || !face["faceRectangle"] || !face["scores"]) {
         callback("DrawBox: Invalid parameters");
