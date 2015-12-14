@@ -27,8 +27,8 @@ OxfordFace.prototype._parseResponse = function (response, body, callback) {
         return;
     }
 
-    if (response.statusCode !== 200) {
-        error = "(" + response.statusCode + ") " + response.statusMessage + ": " + body.code + "->" + body.message;
+    if (response.statusCode < 200 || response.statusCode >= 300) {
+        error = response.statusMessage + "(" + response.statusCode + ")" + (body.code ? " " + body.code : "") + ": " + body.message;
     } else {
         error = false;
         data = response.body;
@@ -197,8 +197,9 @@ OxfordFace.prototype._identifyFaces = function (faceIDs, personGroupID, callback
         json:   true,
         body:
         {
-            faceIds         :   faceIDs,
-            personGroupId   :   personGroupID
+            faceIds                     :   faceIDs,
+            personGroupId               :   personGroupID,
+            maxNumOfCandidatesReturned  : 1
         },
         headers: {
             "content-type" :              "application/json",
@@ -290,7 +291,7 @@ OxfordFace.prototype.trainPersonGroup = function (personGroupID, callback) {
     if (!personGroupID) {
         callback ("Invalid group id");
     } else {
-        self._getTrainStatus(personGroupID, callback);
+        self._trainPersonGroup(personGroupID, callback);
     }
 };
 
@@ -300,16 +301,15 @@ OxfordFace.prototype.trainPersonGroup = function (personGroupID, callback) {
  * @param {type} callback (error, data)
  * @returns {undefined} 
  */
-OxfordFace.prototype.checkProjectStatus = function (personGroupID, callback) {
+OxfordFace.prototype.checkGroupStatus = function (personGroupID, callback) {
     var self = this;
         
     if (!personGroupID) {
         callback ("Invalid group id");
     } else {
-        self._trainPersonGroup(personGroupID, callback);
+        self._getTrainStatus(personGroupID, callback);
     }
 };
-
 
 /**
  * Identifies persons from a person group by one or more input faces. 
