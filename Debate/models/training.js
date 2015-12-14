@@ -1,6 +1,6 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
-var Person = require('person').person;
+var Person = require('../models/person').person;
 
 var trainingSchema = new Schema({
     name :                { type: String, required: true },

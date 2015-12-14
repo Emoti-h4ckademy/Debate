@@ -18,7 +18,7 @@ var addPerson = function(person, callback) {
 var addTraining = function (trainingname, callback) {
   $.ajax({
       type: 'POST',
-      url: '/proyectos',
+      url: '/training',
       data: { name : trainingname },
       dataType: 'json',
       success: function(data){
