@@ -20,6 +20,7 @@
     "mkdirp": "^0.5.1",
     "mongoose": "^4.2.9",
     "morgan": "~1.6.1",
+    "node-dev": "^2.7.1",
     "request": "^2.67.0",
     "serve-favicon": "~2.3.0",
     "twitter": "^1.2.5"
