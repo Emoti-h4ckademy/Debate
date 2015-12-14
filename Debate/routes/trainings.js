@@ -1,17 +1,16 @@
 var express = require('express');
 var TrainingCtrl = require('../controllers/training');
-var PersonCtrl = require('../controllers/person');
 var router = express.Router();
 var config = require('config');
 
 /* GET home page. */
-router.get('/identificacion', function(req, res) {
+router.get('/trainings', function(req, res) {
   TrainingCtrl.getTrainings(function (error, trainings){
     if(error){
       console.log(JSON.stringify(error));
       res.status(500).json(error);
     } else {
-      res.render('identificacion', trainings);
+      res.render('trainings', {trainings : trainings});
     }
   });
 });
@@ -35,7 +34,7 @@ router.get('/training/:id', function(req, res) {
 router.post('/training', function(req, res) {
   var name = req.body.name;
 
-    ProjectCtrl.create(name, function(error, training){
+    TrainingCtrl.create(name, function(error, training){
       if(error){
         console.log(JSON.stringify(error));
         res.status(500).json(error);

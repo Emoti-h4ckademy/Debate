@@ -7,8 +7,10 @@ function Training() {
 }
 
 Training.prototype.getTrainings = function (callback) {
-    this.trainingDB.find().
-            exec(callback);
+    this.trainingDB.find(function(error, trainings){
+      if(error) console.log(error);
+      callback(error, trainings);
+    });
 };
 
 Training.prototype.getTrainingById = function (callback) {
