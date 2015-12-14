@@ -15,6 +15,14 @@ a {
     max-height: 50px;
 }
 
+.mindset-logo {
+  padding: 9px;
+}
+
+.addprojectrow {
+    margin-bottom: 70px;
+}
+
 .main-title {
   margin: 28px 0 5px 0;
   text-align: center;
