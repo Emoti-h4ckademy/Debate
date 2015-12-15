@@ -1,8 +1,8 @@
-var addPerson = function(person, callback) {
+var addPerson = function(trainingId, name, directoryPath, callback) {
   $.ajax({
       type: 'POST',
       url: '/person',
-      data: person,
+      data: {trainingId : trainingId, name : name, directoryPath : directoryPath},
       dataType: 'json',
       success: function(data){
           console.log("Addtraining response: " + data);
@@ -141,5 +141,33 @@ var charactersCounter = function () {
       $(this).keyup(function () {
       charleft(this);
     });
+  });
+};
+
+var displayPanel = function (el){
+    $(el).slideDown();
+};
+var hidePanel = function (el, className) {
+  $(el).closest(className).slideUp();
+};
+var clearForm = function () {
+  $('.personname').val('');
+  $('.facespath').val('');
+  $('.personname').attr("placeholder", "Nombre del person");
+  $('.facespath').attr("placeholder", "Path donde se encuentran las imágenes");
+};
+var clickAddPerson = function (el) {
+  var trainingId = $(el).data('trainingid');
+  var name = $('.personname').filter("input[data-trainingid='" + trainingId + "']").val();
+  var directoryPath = $('.facespath').filter("input[data-trainingid='" + trainingId + "']").val();
+
+  addPerson(trainingId, name, directoryPath, function(error, response){
+    if(error) {
+      alert ("Error saving person: " + error);
+    } else {
+      //hideAddPerson();
+      //$('.person-list').append('<li data-projid="{{_id}}"> <b>Nombre:</b> ' + person.name + ' <b>' + person.info + '</b> </li>');
+      alert('Person saved succesfully');
+    }
   });
 };
