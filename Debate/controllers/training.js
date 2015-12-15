@@ -4,6 +4,7 @@
  */
 function Training() {
     this.trainingDB  = require('../models/training');
+    this.personDB = require('../models/person').person;
 }
 
 Training.prototype.getTrainings = function (callback) {
@@ -14,8 +15,10 @@ Training.prototype.getTrainings = function (callback) {
 };
 
 Training.prototype.getTrainingById = function (callback) {
-    this.trainingDB.findById().
-            exec(callback);
+    this.trainingDB.findById(function(error, training){
+      if(error) console.log(error);
+      callback(error, training);
+    });
 };
 
 Training.prototype.create = function (name, callback) {
@@ -35,6 +38,21 @@ Training.prototype.create = function (name, callback) {
        }
        callback (error, data);
     });
+};
+
+Training.prototype.addPerson = function (trainingID, personName, personDirectoryPath, callback) {
+  var self = this;
+  var person = new self.personDB ({
+    name : personName,
+    directoryPath: personDirectoryPath,
+    faces : [],
+    oxfordPersonID : ''
+  });
+  console.log("Training.addPerson person: " + JSON.stringify(person));
+  self.trainingDB.update({ _id: trainingID }, { $push: { people: person }}, function(error, training){
+    if(error) console.log(error);
+    callback(error, training);
+  });
 };
 
 Training.prototype._generatePersonGroupID = function (trainingID, callback) {
