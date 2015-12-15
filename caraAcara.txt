@@ -1,0 +1,44 @@
+Pedro Sánchez 
+    faceIDs
+        ["9e37e586-94e8-4273-a706-c9450f87131e",
+        "45c6422a-e744-4c43-84f3-f297821797d0",
+        "632b2666-0bab-43f1-9401-ea96d84b2bd6",
+        "d58fa211-4278-44f0-8af0-e9d4737bb4ca",
+        "1e544bf5-cdc9-42ab-994c-745b706830da",
+        "a2727d7f-c881-4918-95e1-ab5561b6dabb",
+        "0166c80e-6c4f-421b-b31f-be8b2a2ecdce",
+        "2a72f707-0b5a-41e8-9717-ae5ffcba5556",
+        "5af7639c-110f-4e81-a17a-5a9859ef243c"]
+    personID
+        "7504701d-e830-4d6f-ae4e-b188e1c2ee1e"
+        
+
+Rajoy
+    faceIDs
+        ["3ca1b40d-bc3e-4abe-ae22-eb8cce27d0f4",
+        "7eb65c7a-82c2-4624-a522-0c048156d219",
+        "7e993799-60ed-42fa-91d8-a09387b2f383",
+        "17ae2f7b-5c18-44ab-8cdc-f0230f51c71f",
+        "eaac86df-c3e7-42a8-9623-fe0762bf7742",
+        "db5ab55d-3d2c-4f42-b3c4-47facdb25a52",
+        "ee0dae0e-e73c-42cd-a749-c942e6180e17",
+        "02f0c0be-79ff-421f-a289-492c1e8139ba",
+        "8648db36-08d8-4657-9792-045a884fd8b4"]
+    personID
+        "6f7fbfc4-264d-41d1-a3dc-a4e5eb473a25"
+        
+
+Grupo: "caraacarah4"
+    Response: "{"status":"succeeded","startTime":"12/14/2015 3:02:39 PM","endTime":"12/14/2015 3:02:39 PM"}"
+    
+    
+Test:
+    8fee428a-1b87-40ce-a3c5-3c7184de1954
+    9117f85d-292e-4afc-a3ce-07895af07357
+    
+Response: [{"faceId":"8fee428a-1b87-40ce-a3c5-3c7184de1954","candidates":[{"personId":"7504701d-e830-4d6f-ae4e-b188e1c2ee1e","confidence":0.61106}]},{"faceId":"9117f85d-292e-4afc-a3ce-07895af07357","candidates":[{"personId":"6f7fbfc4-264d-41d1-a3dc-a4e5eb473a25","confidence":0.75943}]}]
+
+
+"faceRectangle":{"height":74,"left":117,"top":61,"width":74}
+    ,"scores":{"anger":0.00563287176,"contempt":0.0330147259,"disgust":0.009175014,"fear":0.000168148355,"happiness":0.400165141,"neutral":0.540461838,"sadness":0.00180949341,"surprise":0.009572777}},
+{"faceRectangle":{"height":74,"left":385,"top":63,"width":74},"scores":{"anger":0.0146066947,"contempt":0.102840692,"disgust":0.00597200776,"fear":8.23523E-06,"happiness":0.5685659,"neutral":0.303208828,"sadness":0.00471350038,"surprise":8.410675E-05}}])
