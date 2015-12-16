@@ -14,8 +14,8 @@ Training.prototype.getTrainings = function (callback) {
     });
 };
 
-Training.prototype.getTrainingById = function (callback) {
-    this.trainingDB.findById(function(error, training){
+Training.prototype.getTrainingById = function (trainingId, callback) {
+    this.trainingDB.findById(trainingId, function(error, training){
       if(error) console.log(error);
       callback(error, training);
     });
