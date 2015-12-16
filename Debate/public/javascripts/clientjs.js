@@ -10,7 +10,7 @@ var addPerson = function(trainingId, name, directoryPath, callback) {
       },
       error: function(xhr, type){
           console.log('AJAX response returned and error' + xhr + ' ' + type);
-          callback(JSON.parse(xhr.responseText).errmsg);
+          callback(xhr.responseText);
       }
   })
 };
@@ -162,8 +162,9 @@ var clickAddPerson = function (el) {
   var directoryPath = $('.facespath').filter("input[data-trainingid='" + trainingId + "']").val();
 
   addPerson(trainingId, name, directoryPath, function(error, response){
+    console.log("Estamos logueando error: " + error);
     if(error) {
-      alert ("Error saving person: " + error);
+      alert ("Error saving person: " + JSON.parse(error).message);
     } else {
       //hideAddPerson();
       //$('.person-list').append('<li data-projid="{{_id}}"> <b>Nombre:</b> ' + person.name + ' <b>' + person.info + '</b> </li>');
