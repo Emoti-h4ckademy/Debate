@@ -1,0 +1,14 @@
+mongoexport --db debate --collection forcsv --type=csv --fields 'name,timestamp,anger,contempt,disgust,fear,happiness,neutral,sadness,surprise' --out ./debateA9.csv
+
+
+db.candidates.aggregate({"$unwind":"$emotions"},{"$project":{"_id":0,"name":1,"timestamp":"$emotions.timestamp","anger":"$emotions.anger", "contempt":"$emotions.contempt","disgust":"$emotions.disgust","fear":"$emotions.fear","happiness":"$emotions.happiness","neutral":"$emotions.neutral","sadness":"$emotions.sadness","surprise":"$emotions.surprise"}},{"$out" : "forcsv"})
+
+//debate a 9 
+db.candidates.aggregate({"$unwind":"$emotions"},{"$project":{"_id":0,"name":1,"timestamp":"$emotions.timestamp","anger":"$emotions.anger", "contempt":"$emotions.contempt","disgust":"$emotions.disgust","fear":"$emotions.fear","happiness":"$emotions.happiness","neutral":"$emotions.neutral","sadness":"$emotions.sadness","surprise":"$emotions.surprise"}}, { "$match" : { "timestamp" : { "$gte": 2306, "$lte": 2676 } } },{"$group":{"_id":"$name", "anger": { $avg: "$anger" },"contempt": { $avg: "$contempt" },"disgust": { $avg: "$disgust" },"fear": { $avg: "$fear" },"sadness": { $avg: "$sadness" },"happiness": { $avg: "$happiness" },"neutral": { $avg: "$neutral" },"surprise": { $avg: "$surprise" }}},{"$out" : "avgEmo"})
+
+//cara a cara
+db.candidates.aggregate({ "$match" : { "project" : "Cara a Cara"}},{"$unwind":"$emotions"},{"$project":{"_id":0,"name":1,"timestamp":"$emotions.timestamp","anger":"$emotions.anger", "contempt":"$emotions.contempt","disgust":"$emotions.disgust","fear":"$emotions.fear","happiness":"$emotions.happiness","neutral":"$emotions.neutral","sadness":"$emotions.sadness","surprise":"$emotions.surprise"}},{"$group":{"_id":"$name", "anger": { $avg: "$anger" },"contempt": { $avg: "$contempt" },"disgust": { $avg: "$disgust" },"fear": { $avg: "$fear" },"sadness": { $avg: "$sadness" },"happiness": { $avg: "$happiness" },"neutral": { $avg: "$neutral" },"surprise": { $avg: "$surprise" }}},{"$out" : "avgEmo"})
+
+db.candidates.aggregate({ "$match" : { "project" : "Cara a Cara"}},{"$unwind":"$emotions"},{"$project":{"_id":0,"name":1,"timestamp":"$emotions.timestamp","anger":"$emotions.anger", "contempt":"$emotions.contempt","disgust":"$emotions.disgust","fear":"$emotions.fear","happiness":"$emotions.happiness","neutral":"$emotions.neutral","sadness":"$emotions.sadness","surprise":"$emotions.surprise"}}, { "$match" : { "timestamp" : { "$gte": 3579, "$lte": 4772 } } }, {"$group":{"_id":"$name", "anger": { $avg: "$anger" },"contempt": { $avg: "$contempt" },"disgust": { $avg: "$disgust" },"fear": { $avg: "$fear" },"sadness": { $avg: "$sadness" },"happiness": { $avg: "$happiness" },"neutral": { $avg: "$neutral" },"surprise": { $avg: "$surprise" }}},{"$out" : "avgEmo"})
+
+mongoexport --db debate --collection avgEmo --fields 'name,anger,contempt,disgust,fear,happiness,neutral,sadness,surprise' --out ./data/avgEmotions.json
