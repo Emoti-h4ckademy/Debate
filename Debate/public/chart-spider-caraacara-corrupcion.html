@@ -1,0 +1,105 @@
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <title>emoticritico politico</title>
+</head>
+<body>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="https://code.highcharts.com/highcharts-more.js"></script>
+<script src="https://code.highcharts.com/modules/exporting.js"></script>
+
+<div id="container" style="min-width: 400px; width: 100%; height: 65%; margin: 0 auto"></div>
+<div>
+    <a href="http://emoticritico.com"><img src="http://emoticritico.com/images/emotiLogo.svg" onerror="this.src='http://emoticritico.com/images/emotiLogo.png'" style="width: 75px;"></a>
+    <p style="font-size: 0.75em;">* Emociones medias expresadas durante el cara a cara entre Mariano Rajoy y Pedro Sánchez, con fecha 14/12/2015, en valor de %. En la gráfica no se representa la neutralidad.</p>
+</div>
+
+<script type="text/javascript">
+$(function () {
+
+    var data = [{"_id":"pp","anger":0.06503097216033332,"contempt":0.015185348414900011,"disgust":0.055731686527869626,"fear":0.00210456292068089,"sadness":0.02083518108225702,"happiness":0.006265694131081038,"neutral":0.7060286136551848,"surprise":0.12881794004294447},
+{"_id":"psoe","anger":0.05540800696095793,"contempt":0.03214223397559022,"disgust":0.05659863146806591,"fear":0.0031093009240928202,"sadness":0.06259793499838788,"happiness":0.03820667682580442,"neutral":0.7078483909446989,"surprise":0.04408882341038099}
+];
+
+
+function getArrayDataFor(index){
+  var object = data[index];
+  var arrayData = [];
+  for(var key in object) {
+    if(key !== "_id" && key !== "neutral"){
+      arrayData.push(object[key]);
+    }
+  }
+  console.log(arrayData);
+  return arrayData;
+}
+
+
+    $('#container').highcharts({
+
+        credits: {
+            enabled: false
+        },
+
+        chart: {
+            polar: true,
+            type: 'area'
+        },
+
+        title: {
+            text: 'Emociones en el cara a cara en el tema de corrupción',
+            x: -80
+        },
+
+        pane: {
+            size: '80%'
+        },
+
+        xAxis: {
+            categories: ["enfado", "desprecio", "asco", "miedo", "tristeza", "felicidad", "sorpresa"],
+            tickmarkPlacement: 'on',
+            lineWidth: 0
+        },
+
+        yAxis: {
+            gridLineInterpolation: 'polygon',
+            lineWidth: 0,
+            min: 0
+        },
+
+        tooltip: {
+            shared: true,
+            pointFormatter: function(point, series){
+              return '<span style="color:'+this.series.color+'">' + this.series.name + ': <b>' +(this.y * 100).toFixed(2) + '%</b></span><br/>';
+            },
+            valueDecimals: 3
+        },
+
+        legend: {
+            align: 'right',
+            verticalAlign: 'top',
+            y: 70,
+            layout: 'vertical'
+        },
+
+        series: [{
+            name: 'Mariano Rajoy (Partido Popular)',
+            data: getArrayDataFor(0),
+            pointPlacement: 'on',
+            color: '#00A2E2',
+            marker: { enabled: false }
+        }, {
+            name: 'Pedro Sánchez (PSOE)',
+            data: getArrayDataFor(1),
+            pointPlacement: 'on',
+            color: '#EE1C25',
+            marker: { enabled: false }
+        }]
+
+    });
+});
+
+</script>
+</body>
+</html>

@@ -1,0 +1,134 @@
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <title>emoticritico politico</title>
+</head>
+<body>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="https://code.highcharts.com/highcharts-more.js"></script>
+<script src="https://code.highcharts.com/modules/exporting.js"></script>
+
+<div id="container" style="min-width: 400px; width: 100%; height: 75%; margin: 0 auto"></div>
+<div>
+    <a href="http://emoticritico.com"><img src="http://emoticritico.com/images/emotiLogo.svg" onerror="this.src='http://emoticritico.com/images/emotiLogo.png'" style="width: 75px;"></a>
+    <p style="font-size: 0.75em;">* Emociones medias expresadas por los/as candidatos/as durante el debate retransmitido en La 1 en el tramo de tiempo en el que se abordaron las cuestiones relativas a igualdad de género, con fecha 9/12/2015, expresadas en %. En la gráfica no se representa la neutralidad.</p>
+</div>
+
+
+<script type="text/javascript">
+$(function () {
+
+    var data = [{"_id":"ciudadanos","anger":0.0058264325183731355,"contempt":0.01150455946668358,"disgust":0.007236463490213433,"fear":0.02057933427113383,"sadness":0.07521391887832833,"happiness":0.07137156331567164,"neutral":0.5724697961883582,"surprise":0.2357979331807761},
+{"_id":"iu","anger":0.006290221550319215,"contempt":0.015356012312235299,"disgust":0.0067769497581450944,"fear":0.010029450027045687,"sadness":0.016557237276372545,"happiness":0.12188860723568631,"neutral":0.7528292303803922,"surprise":0.07027229054324902},
+{"_id":"podemos","anger":0.0031588731992388893,"contempt":0.007833655251944445,"disgust":0.0032999704469644443,"fear":0.012695165207277776,"sadness":0.00456090224298111,"happiness":0.0022283752625777776,"neutral":0.5485540439444444,"surprise":0.4176690075555555},
+{"_id":"pp","anger":0.0013613486454362785,"contempt":0.027056314680838058,"disgust":0.005379722383177605,"fear":0.0018066775300423314,"sadness":0.005073207452780942,"happiness":0.22574208457348846,"neutral":0.6253102667105396,"surprise":0.10827038116458393},
+{"_id":"psoe","anger":0.01374127324307292,"contempt":0.009362045545183334,"disgust":0.003948868999516875,"fear":0.005116245524787291,"sadness":0.012848652725866666,"happiness":0.07083611812427082,"neutral":0.774845116510417,"surprise":0.10930167571934835},
+{"_id":"unio2","anger":0.004151229168419355,"contempt":0.005967546791200002,"disgust":0.0018248222243548383,"fear":0.020926029211516123,"sadness":0.08042148472774195,"happiness":0.0043684556737451615,"neutral":0.7790064336451613,"surprise":0.10333400122960966}
+];
+
+
+function getArrayDataFor(index){
+  var object = data[index];
+  var arrayData = [];
+  for(var key in object) {
+    if(key !== "_id" && key !== "neutral"){
+      arrayData.push(object[key]);
+    }
+  }
+  console.log(arrayData);
+  return arrayData;
+}
+
+
+    $('#container').highcharts({
+
+        credits: {
+            enabled: false
+        },
+
+        chart: {
+            polar: true,
+            type: 'area'
+        },
+
+        title: {
+            text: 'Emociones en el debate a 9 (La 1) sobre Igualdad de Género',
+            x: -80
+        },
+
+        pane: {
+            size: '80%'
+        },
+
+        xAxis: {
+            categories: ["enfado", "desprecio", "asco", "miedo", "tristeza", "felicidad", "sorpresa"],
+            tickmarkPlacement: 'on',
+            lineWidth: 0
+        },
+
+        yAxis: {
+            gridLineInterpolation: 'polygon',
+            lineWidth: 0,
+            min: 0
+        },
+
+        tooltip: {
+            shared: true,
+            pointFormatter: function(point, series){
+              return '<span style="color:'+this.series.color+'">' + this.series.name + ': <b>' +(this.y * 100).toFixed(2) + '%</b></span><br/>';
+            },
+            valueDecimals: 3
+        },
+
+        legend: {
+            align: 'right',
+            verticalAlign: 'top',
+            y: 70,
+            layout: 'vertical'
+        },
+
+        series: [{
+            name: 'Marta Rivera (Ciudadanos)',
+            data: getArrayDataFor(0),
+            pointPlacement: 'on',
+            color: '#F28624',
+            marker: { enabled: false }
+        }, {
+            name: 'Alberto Garzón (Unidad Popular)',
+            data: getArrayDataFor(1),
+            pointPlacement: 'on',
+            color: '#009E61',
+            marker: { enabled: false }
+        }, {
+            name: 'Íñigo Errejón (Podemos)',
+            data: getArrayDataFor(3),
+            pointPlacement: 'on',
+            color: '#6B1F5F',
+            marker: { enabled: false }
+        }, {
+            name: 'Pablo Casado (Partido Popular)',
+            data: getArrayDataFor(4),
+            pointPlacement: 'on',
+            color: '#00A2E2',
+            marker: { enabled: false }
+        }, {
+            name: 'Antonio Hernando (PSOE)',
+            data: getArrayDataFor(5),
+            pointPlacement: 'on',
+            color: '#EE1C25',
+            marker: { enabled: false }
+        }, {
+            name: 'Monstse Surroca (Unió)',
+            data: getArrayDataFor(7),
+            pointPlacement: 'on',
+            color: '#FEF035',
+            marker: { enabled: false }
+        }]
+
+    });
+});
+
+</script>
+</body>
+</html>

@@ -42,3 +42,6 @@ Assets
 #Avoid uploading temporal images
 tmp/
 snapshots/
+snap/
+video/
+data/

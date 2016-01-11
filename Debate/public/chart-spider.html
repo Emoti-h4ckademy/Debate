@@ -1,0 +1,153 @@
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <title>emoticritico politico</title>
+</head>
+<body>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="https://code.highcharts.com/highcharts-more.js"></script>
+<script src="https://code.highcharts.com/modules/exporting.js"></script>
+
+<div id="container" style="min-width: 400px; width: 100%; height: 65%; margin: 0 auto"></div>
+<div>
+    <a href="http://emoticritico.com"><img src="http://emoticritico.com/images/emotiLogo.svg" onerror="this.src='http://emoticritico.com/images/emotiLogo.png'" style="width: 75px;"></a>
+    <p style="font-size: 0.75em;">* Emociones medias expresadas por los/as candidatos/as durante el debate retransmitido en La 1, con fecha 9/12/2015, expresadas en %. En la gráfica no se representa la neutralidad.</p>
+</div>
+
+<script type="text/javascript">
+$(function () {
+
+    var data = [{"_id":"ciudadanos","anger":0.0029039519395919907,"contempt":0.033463526348665895,"disgust":0.029317718063237522,"fear":0.017210548122213152,"sadness":0.1461202876649689,"happiness":0.10254895163231359,"neutral":0.4898370542589137,"surprise":0.17859796187950705},
+{"_id":"iu","anger":0.001747948994645371,"contempt":0.007431444495824914,"disgust":0.001808072247705711,"fear":0.004308462753518049,"sadness":0.02205562880493734,"happiness":0.05896191619171679,"neutral":0.8580363881628452,"surprise":0.045650138391718206},
+{"_id":"pnv","anger":0.007672064978485889,"contempt":0.026455991390543783,"disgust":0.031028133150027788,"fear":0.006311143785888658,"sadness":0.12396222700546775,"happiness":0.01818619930334856,"neutral":0.738398955631458,"surprise":0.04798528523104121},
+{"_id":"podemos","anger":0.0032809026231466836,"contempt":0.0141261609807072,"disgust":0.0027206105464128065,"fear":0.004390212667152338,"sadness":0.006914670349523799,"happiness":0.02129034931602338,"neutral":0.5765786708550816,"surprise":0.3706984206813075},
+{"_id":"pp","anger":0.0034336566602797738,"contempt":0.021088935735431313,"disgust":0.003502452398659908,"fear":0.002602080872207829,"sadness":0.0050666757491663935,"happiness":0.25554361946076093,"neutral":0.603905725088817,"surprise":0.10485685628107506},
+{"_id":"psoe","anger":0.006478757160231452,"contempt":0.01644425701143818,"disgust":0.004434118555121382,"fear":0.0018324912281427728,"sadness":0.009739743361369102,"happiness":0.10189690248870938,"neutral":0.8106266180829806,"surprise":0.04854711349196073},
+{"_id":"unio","anger":0.00765720894775041,"contempt":0.008689397766491051,"disgust":0.0031507880830231043,"fear":0.0011450936758379134,"sadness":0.005299094024278457,"happiness":0.08312314671597189,"neutral":0.8506832339908534,"surprise":0.04025203646451011},
+{"_id":"unio2","anger":0.0038905411766963047,"contempt":0.009126027936146811,"disgust":0.005054827362436433,"fear":0.02188615330011459,"sadness":0.07005003393251516,"happiness":0.01546499526445206,"neutral":0.725315600297297,"surprise":0.14921182106296219},
+{"_id":"upyd","anger":0.036158934898231916,"contempt":0.020035829310670442,"disgust":0.02751485871296875,"fear":0.009491798229391578,"sadness":0.036894750597806815,"happiness":0.043865296274164786,"neutral":0.7631968501989479,"surprise":0.0628416823277909}];
+
+
+function getArrayDataFor(index){
+  var object = data[index];
+  var arrayData = [];
+  for(var key in object) {
+    if(key !== "_id" && key !== "neutral"){
+      arrayData.push(object[key]);
+    }
+  }
+  console.log(arrayData);
+  return arrayData;
+}
+
+
+    $('#container').highcharts({
+
+        credits: {
+            enabled: false
+        },
+
+        chart: {
+            polar: true,
+            type: 'area'
+        },
+
+        title: {
+            text: 'Emociones en el debate a 9 (La 1)',
+            x: -80
+        },
+
+        pane: {
+            size: '80%'
+        },
+
+        xAxis: {
+            categories: ["enfado", "desprecio", "asco", "miedo", "tristeza", "felicidad", "sorpresa"],
+            tickmarkPlacement: 'on',
+            lineWidth: 0
+        },
+
+        yAxis: {
+            gridLineInterpolation: 'polygon',
+            lineWidth: 0,
+            min: 0
+        },
+
+        tooltip: {
+            shared: true,
+            pointFormatter: function(point, series){
+              return '<span style="color:'+this.series.color+'">' + this.series.name + ': <b>' +(this.y * 100).toFixed(2) + '%</b></span><br/>';
+            },
+            valueDecimals: 3
+        },
+
+        legend: {
+            align: 'right',
+            verticalAlign: 'top',
+            y: 70,
+            layout: 'vertical'
+        },
+
+        series: [{
+            name: 'Marta Rivera (Ciudadanos)',
+            data: getArrayDataFor(0),
+            pointPlacement: 'on',
+            color: '#F28624',
+            marker: { enabled: false }
+        }, {
+            name: 'Alberto Garzón (Unidad Popular)',
+            data: getArrayDataFor(1),
+            pointPlacement: 'on',
+            color: '#009E61',
+            marker: { enabled: false }
+        }, {
+            name: 'Aitor Esteban (PNV)',
+            data: getArrayDataFor(2),
+            pointPlacement: 'on',
+            color: '#006636',
+            marker: { enabled: false }
+        }, {
+            name: 'Íñigo Errejón (Podemos)',
+            data: getArrayDataFor(3),
+            pointPlacement: 'on',
+            color: '#6B1F5F',
+            marker: { enabled: false }
+        }, {
+            name: 'Pablo Casado (Partido Popular)',
+            data: getArrayDataFor(4),
+            pointPlacement: 'on',
+            color: '#00A2E2',
+            marker: { enabled: false }
+        }, {
+            name: 'Antonio Hernando (PSOE)',
+            data: getArrayDataFor(5),
+            pointPlacement: 'on',
+            color: '#EE1C25',
+            marker: { enabled: false }
+        }, {
+            name: 'Miquel Puig (Democràcia)',
+            data: getArrayDataFor(6),
+            pointPlacement: 'on',
+            color: '#292C69',
+            marker: { enabled: false }
+        }, {
+            name: 'Monstse Surroca (Unió)',
+            data: getArrayDataFor(7),
+            pointPlacement: 'on',
+            color: '#FEF035',
+            marker: { enabled: false }
+        }, {
+            name: 'Andrés Herzog (UPyD)',
+            data: getArrayDataFor(8),
+            pointPlacement: 'on',
+            color: '#E5007E',
+            marker: { enabled: false }
+        }]
+
+    });
+});
+
+</script>
+</body>
+</html>

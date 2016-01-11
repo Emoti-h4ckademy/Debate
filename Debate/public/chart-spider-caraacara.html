@@ -1,0 +1,104 @@
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <title>emoticritico politico</title>
+</head>
+<body>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="https://code.highcharts.com/highcharts-more.js"></script>
+<script src="https://code.highcharts.com/modules/exporting.js"></script>
+
+<div id="container" style="min-width: 400px; width: 100%; height: 65%; margin: 0 auto"></div>
+<div>
+    <a href="http://emoticritico.com"><img src="http://emoticritico.com/images/emotiLogo.svg" onerror="this.src='http://emoticritico.com/images/emotiLogo.png'" style="width: 75px;"></a>
+    <p style="font-size: 0.75em;">* Emociones medias expresadas durante el cara a cara entre Mariano Rajoy y Pedro Sánchez, con fecha 14/12/2015, en valor de %. En la gráfica no se representa la neutralidad.</p>
+</div>
+
+<script type="text/javascript">
+$(function () {
+
+    var data = [{"_id":"pp","anger":0.05168805139876197,"contempt":0.013933394504638652,"disgust":0.036731207809148306,"fear":0.0025288023496317894,"sadness":0.02276470708701159,"happiness":0.012348402948824947,"neutral":0.6880876906800006,"surprise":0.1719177430573211},
+{"_id":"psoe","anger":0.03640416797172193,"contempt":0.0341951299323514,"disgust":0.03538601790519805,"fear":0.003094683657035837,"sadness":0.08610957976646764,"happiness":0.04781956321155984,"neutral":0.7296206929361987,"surprise":0.02737016403954986}];
+
+
+function getArrayDataFor(index){
+  var object = data[index];
+  var arrayData = [];
+  for(var key in object) {
+    if(key !== "_id" && key !== "neutral"){
+      arrayData.push(object[key]);
+    }
+  }
+  console.log(arrayData);
+  return arrayData;
+}
+
+
+    $('#container').highcharts({
+
+        credits: {
+            enabled: false
+        },
+
+        chart: {
+            polar: true,
+            type: 'area'
+        },
+
+        title: {
+            text: 'Emociones en el cara a cara',
+            x: -80
+        },
+
+        pane: {
+            size: '80%'
+        },
+
+        xAxis: {
+            categories: ["enfado", "desprecio", "asco", "miedo", "tristeza", "felicidad", "sorpresa"],
+            tickmarkPlacement: 'on',
+            lineWidth: 0
+        },
+
+        yAxis: {
+            gridLineInterpolation: 'polygon',
+            lineWidth: 0,
+            min: 0
+        },
+
+        tooltip: {
+            shared: true,
+            pointFormatter: function(point, series){
+              return '<span style="color:'+this.series.color+'">' + this.series.name + ': <b>' +(this.y * 100).toFixed(2) + '%</b></span><br/>';
+            },
+            valueDecimals: 3
+        },
+
+        legend: {
+            align: 'right',
+            verticalAlign: 'top',
+            y: 70,
+            layout: 'vertical'
+        },
+
+        series: [{
+            name: 'Mariano Rajoy (Partido Popular)',
+            data: getArrayDataFor(0),
+            pointPlacement: 'on',
+            color: '#00A2E2',
+            marker: { enabled: false }
+        }, {
+            name: 'Pedro Sánchez (PSOE)',
+            data: getArrayDataFor(1),
+            pointPlacement: 'on',
+            color: '#EE1C25',
+            marker: { enabled: false }
+        }]
+
+    });
+});
+
+</script>
+</body>
+</html>
